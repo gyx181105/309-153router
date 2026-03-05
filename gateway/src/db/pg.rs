@@ -92,9 +92,84 @@ pub async fn get_model_pricing(
     }))
 }
 
-// ─── 原子扣费事务 ─────────────────────────────────────────────────────────────
+/// 查询单个模型定价并返回 provider（供 GET /v1/models/:model/pricing 使用）。
+pub async fn get_model_pricing_with_provider(
+    pool:  &PgPool,
+    model: &str,
+) -> AppResult<Option<(ModelPricingInfo, String)>> {
+    #[derive(sqlx::FromRow)]
+    struct Row {
+        input_price:  BigDecimal,
+        output_price: BigDecimal,
+        provider:     String,
+    }
 
-/// 在单个 Postgres 事务内完成完整的计费闭环。
+    let row: Option<Row> = sqlx::query_as(
+        "SELECT input_price, output_price, provider \
+         FROM model_pricing \
+         WHERE model_name = $1 AND enabled = true",
+    )
+    .bind(model)
+    .fetch_optional(pool)
+    .await
+    .map_err(|e| AppError::Internal(format!("db get_pricing: {e}")))?;
+
+    Ok(row.map(|r| (
+        ModelPricingInfo {
+            input_price:  r.input_price,
+            output_price: r.output_price,
+        },
+        r.provider,
+    )))
+}
+
+/// 列出所有已启用的模型（供 GET /v1/models 使用）。
+pub async fn list_enabled_models(pool: &PgPool) -> AppResult<Vec<(String, String, i64)>> {
+    #[derive(sqlx::FromRow)]
+    struct Row {
+        model_name: String,
+        provider:   String,
+        created_at: chrono::DateTime<chrono::Utc>,
+    }
+
+    let rows: Vec<Row> = sqlx::query_as(
+        "SELECT model_name, provider, created_at \
+         FROM model_pricing \
+         WHERE enabled = true \
+         ORDER BY model_name",
+    )
+    .fetch_all(pool)
+    .await
+    .map_err(|e| AppError::Internal(format!("db list_models: {e}")))?;
+
+    Ok(rows.into_iter().map(|r| (
+        r.model_name,
+        r.provider,
+        r.created_at.timestamp(),
+    )).collect())
+}
+
+// ─── 用户余额（调用前预检）────────────────────────────────────────────────────
+
+/// 查询用户当前余额（只读，不开启事务）。
+/// 若用户尚无 `user_balances` 记录则视为 0。
+/// 用于在发起上游请求前预检，避免无余额仍生成内容。
+pub async fn get_user_balance(pool: &PgPool, user_id: Uuid) -> AppResult<BigDecimal> {
+    #[derive(sqlx::FromRow)]
+    struct Row { balance: BigDecimal }
+
+    let row: Option<Row> = sqlx::query_as(
+        "SELECT balance FROM user_balances WHERE user_id = $1",
+    )
+    .bind(user_id)
+    .fetch_optional(pool)
+    .await
+    .map_err(|e| AppError::Internal(format!("db get_balance: {e}")))?;
+
+    Ok(row.map(|r| r.balance).unwrap_or_else(|| BigDecimal::from(0)))
+}
+
+// ─── 原子扣费事务 ─────────────────────────────────────────────────────────────
 ///
 /// ```text
 /// BEGIN
@@ -170,16 +245,19 @@ pub async fn bill_in_tx(pool: &PgPool, args: BillArgs) -> AppResult<()> {
         }
     };
 
-    // ── 2. 写 usage_logs ─────────────────────────────────────────────────────
+    // ── 2. 写 usage_logs（含 requested_model, provider, request_id）─────────
     sqlx::query(
         "INSERT INTO usage_logs \
-            (user_id, api_key_id, model, input_tokens, output_tokens, \
-             total_tokens, cost, latency_ms, status) \
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, 'success'::\"UsageStatus\")",
+            (user_id, api_key_id, model, requested_model, provider, request_id, \
+             input_tokens, output_tokens, total_tokens, cost, latency_ms, status) \
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, 'success'::\"UsageStatus\")",
     )
     .bind(args.user_id)
     .bind(args.api_key_id)
     .bind(&args.model)
+    .bind(args.requested_model.as_deref())
+    .bind(args.provider.as_deref())
+    .bind(args.request_id.as_deref())
     .bind(args.input_tokens)
     .bind(args.output_tokens)
     .bind(args.total_tokens)
