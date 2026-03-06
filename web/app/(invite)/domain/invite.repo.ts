@@ -121,6 +121,47 @@ export async function getRechargeRewardRuleForAdmin() {
 }
 
 /**
+ * 获取所有邀请奖励规则（供 superadmin 列表/编辑）
+ */
+export async function getInviteRewardRulesForAdmin() {
+  return prisma.inviteRewardRule.findMany({
+    orderBy: { inviteCount: 'asc' },
+    select: {
+      id: true,
+      inviteCount: true,
+      rewardType: true,
+      rewardValue: true,
+      rewardName: true,
+      rewardDescription: true,
+      isActive: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+  })
+}
+
+/**
+ * 按 id 更新单条邀请奖励规则
+ */
+export async function updateInviteRewardRuleById(
+  id: number,
+  data: { rewardValue?: number; rewardName?: string; rewardDescription?: string | null; isActive?: boolean }
+) {
+  const updateData: Record<string, unknown> = {}
+  if (typeof data.rewardValue === 'number') updateData.rewardValue = data.rewardValue
+  if (typeof data.rewardName === 'string') updateData.rewardName = data.rewardName
+  if (data.rewardDescription !== undefined) updateData.rewardDescription = data.rewardDescription
+  if (typeof data.isActive === 'boolean') updateData.isActive = data.isActive
+  if (Object.keys(updateData).length === 0) {
+    return prisma.inviteRewardRule.findUnique({ where: { id } })
+  }
+  return prisma.inviteRewardRule.update({
+    where: { id },
+    data: updateData,
+  })
+}
+
+/**
  * 更新「被邀请人首充」奖励规则（reward_value 单位：元）
  */
 export async function updateRechargeRewardRuleForAdmin(data: { rewardValue?: number; isActive?: boolean }) {

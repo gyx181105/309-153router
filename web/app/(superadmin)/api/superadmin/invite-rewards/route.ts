@@ -1,30 +1,31 @@
 /**
  * Superadmin 邀请奖励设置 API
- * GET /api/superadmin/invite-rewards  - 获取首充奖励规则
- * PATCH /api/superadmin/invite-rewards - 更新首充奖励金额/启用状态
+ * GET /api/superadmin/invite-rewards  - 获取所有奖励规则
+ * PATCH /api/superadmin/invite-rewards - 按 id 更新单条规则
  */
 import { NextRequest, NextResponse } from 'next/server'
 import {
-  getRechargeRewardRuleForAdmin,
-  updateRechargeRewardRuleForAdmin,
+  getInviteRewardRulesForAdmin,
+  updateInviteRewardRuleById,
 } from '@/app/(invite)/domain/invite.repo'
 
 export async function GET() {
   try {
-    const rule = await getRechargeRewardRuleForAdmin()
+    const rules = await getInviteRewardRulesForAdmin()
     return NextResponse.json({
       success: true,
       data: {
-        rechargeReward: rule
-          ? {
-              id: rule.id,
-              inviteCount: rule.inviteCount,
-              rewardType: rule.rewardType,
-              rewardValue: rule.rewardValue,
-              rewardName: rule.rewardName,
-              isActive: rule.isActive,
-            }
-          : null,
+        rules: rules.map((r) => ({
+          id: r.id,
+          inviteCount: r.inviteCount,
+          rewardType: r.rewardType,
+          rewardValue: r.rewardValue,
+          rewardName: r.rewardName,
+          rewardDescription: r.rewardDescription ?? '',
+          isActive: r.isActive,
+          createdAt: r.createdAt?.toISOString?.() ?? null,
+          updatedAt: r.updatedAt?.toISOString?.() ?? null,
+        })),
       },
     })
   } catch (error: unknown) {
@@ -42,12 +43,27 @@ export async function GET() {
 export async function PATCH(request: NextRequest) {
   try {
     const body = await request.json()
+    const id = typeof body.id === 'number' ? body.id : undefined
+    if (id == null) {
+      return NextResponse.json(
+        { success: false, detail: '请提供规则 id' },
+        { status: 400 }
+      )
+    }
     const rewardValue =
-      typeof body.rewardValue === 'number' ? body.rewardValue : undefined
+      typeof body.rewardValue === 'number'
+        ? Math.round(body.rewardValue)
+        : undefined
+    const rewardName =
+      typeof body.rewardName === 'string' ? body.rewardName : undefined
+    const rewardDescription =
+      body.rewardDescription !== undefined ? body.rewardDescription : undefined
     const isActive =
       typeof body.isActive === 'boolean' ? body.isActive : undefined
-    const updated = await updateRechargeRewardRuleForAdmin({
+    const updated = await updateInviteRewardRuleById(id, {
       rewardValue,
+      rewardName,
+      rewardDescription,
       isActive,
     })
     return NextResponse.json({
@@ -58,6 +74,7 @@ export async function PATCH(request: NextRequest) {
         rewardType: updated.rewardType,
         rewardValue: updated.rewardValue,
         rewardName: updated.rewardName,
+        rewardDescription: updated.rewardDescription ?? '',
         isActive: updated.isActive,
       },
     })

@@ -4,69 +4,61 @@ import { useState, useEffect } from "react"
 import { DashboardLayout } from "@/app/(dashboard)/components/dashboard-layout"
 import { AuthGuard } from "@/app/(auth)/components/auth-guard"
 import { SuperadminNav } from "@/app/(superadmin)/components/superadmin-nav"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
+import { Loader2 } from "lucide-react"
 
-type RechargeReward = {
+type RewardRule = {
   id: number
   inviteCount: number
   rewardType: string
   rewardValue: number
   rewardName: string
+  rewardDescription: string
   isActive: boolean
-} | null
+}
+
+function inviteCountLabel(count: number): string {
+  if (count === 0) return "被邀请人首充"
+  if (count === -1) return "每邀请1人"
+  return `邀请满${count}人`
+}
 
 export default function SuperadminInviteRewardsPage() {
-  const [rechargeReward, setRechargeReward] = useState<RechargeReward>(null)
+  const [rules, setRules] = useState<RewardRule[]>([])
   const [loading, setLoading] = useState(true)
-  const [saving, setSaving] = useState(false)
-  const [rewardValue, setRewardValue] = useState("")
-  const [isActive, setIsActive] = useState(true)
-  const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null)
 
-  useEffect(() => {
+  const fetchRules = () => {
     fetch("/api/superadmin/invite-rewards")
       .then((res) => res.json())
       .then((json) => {
-        if (json.success && json.data?.rechargeReward) {
-          const r = json.data.rechargeReward
-          setRechargeReward(r)
-          setRewardValue(String(r.rewardValue))
-          setIsActive(r.isActive)
+        if (json.success && json.data?.rules) {
+          setRules(
+            json.data.rules.map((r: RewardRule) => ({
+              ...r,
+              rewardDescription: r.rewardDescription ?? "",
+            }))
+          )
         }
       })
       .catch(console.error)
       .finally(() => setLoading(false))
-  }, [])
-
-  const handleSave = () => {
-    const value = Number(rewardValue)
-    if (Number.isNaN(value) || value < 0) {
-      setMessage({ type: "error", text: "请输入有效的金额（≥0）" })
-      return
-    }
-    setSaving(true)
-    setMessage(null)
-    fetch("/api/superadmin/invite-rewards", {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ rewardValue: value, isActive }),
-    })
-      .then((res) => res.json())
-      .then((json) => {
-        if (json.success) {
-          setRechargeReward(json.data)
-          setMessage({ type: "success", text: "已保存" })
-        } else {
-          setMessage({ type: "error", text: json.detail || "保存失败" })
-        }
-      })
-      .catch((e) => setMessage({ type: "error", text: e.message || "保存失败" }))
-      .finally(() => setSaving(false))
   }
+
+  useEffect(() => {
+    setLoading(true)
+    fetchRules()
+  }, [])
 
   if (loading) {
     return (
@@ -89,56 +81,168 @@ export default function SuperadminInviteRewardsPage() {
           <div>
             <h1 className="text-lg font-semibold mb-1">邀请奖励设置</h1>
             <p className="text-xs text-muted-foreground">
-              被邀请人首次充值时，邀请人获得的余额奖励（元）及启用状态
+              所有邀请奖励规则，reward_type=balance 时 reward_value 为金额（元），其余为积分等
             </p>
           </div>
 
-          <Card className="max-w-md">
+          <Card>
             <CardHeader>
-              <CardTitle className="text-base">被邀请人首充奖励</CardTitle>
-              <CardDescription>
-                {rechargeReward?.rewardName ?? "邀请好友注册且被邀请人首次充值后，邀请人获得的余额（元）"}
-              </CardDescription>
+              <CardTitle className="text-base">奖励规则列表</CardTitle>
+              <p className="text-xs text-muted-foreground">共 {rules.length} 条，可修改后点击该行保存</p>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="rewardValue">奖励金额（元）</Label>
-                <Input
-                  id="rewardValue"
-                  type="number"
-                  min={0}
-                  step={0.01}
-                  value={rewardValue}
-                  onChange={(e) => setRewardValue(e.target.value)}
-                  placeholder="10"
-                />
+            <CardContent>
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="w-[120px]">invite_count 含义</TableHead>
+                      <TableHead className="w-[90px]">类型</TableHead>
+                      <TableHead className="w-[100px]">数值</TableHead>
+                      <TableHead>奖励名称</TableHead>
+                      <TableHead>描述</TableHead>
+                      <TableHead className="w-[70px]">启用</TableHead>
+                      <TableHead className="w-[80px]"></TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {rules.length === 0 ? (
+                      <TableRow>
+                        <TableCell colSpan={7} className="text-center text-muted-foreground py-8">
+                          暂无奖励规则
+                        </TableCell>
+                      </TableRow>
+                    ) : (
+                      rules.map((rule) => (
+                        <RewardRuleRow
+                          key={rule.id}
+                          rule={rule}
+                          onSaved={(updated) => {
+                            setRules((prev) =>
+                              prev.map((r) => (r.id === updated.id ? { ...r, ...updated } : r))
+                            )
+                          }}
+                        />
+                      ))
+                    )}
+                  </TableBody>
+                </Table>
               </div>
-              <div className="flex items-center justify-between">
-                <Label htmlFor="isActive">启用</Label>
-                <Switch
-                  id="isActive"
-                  checked={isActive}
-                  onCheckedChange={setIsActive}
-                />
-              </div>
-              {message && (
-                <p
-                  className={
-                    message.type === "success"
-                      ? "text-sm text-green-600"
-                      : "text-sm text-destructive"
-                  }
-                >
-                  {message.text}
-                </p>
-              )}
-              <Button onClick={handleSave} disabled={saving}>
-                {saving ? "保存中…" : "保存"}
-              </Button>
             </CardContent>
           </Card>
         </div>
       </DashboardLayout>
     </AuthGuard>
+  )
+}
+
+function RewardRuleRow({
+  rule,
+  onSaved,
+}: {
+  rule: RewardRule
+  onSaved: (updated: Partial<RewardRule>) => void
+}) {
+  const [rewardValue, setRewardValue] = useState(String(rule.rewardValue))
+  const [rewardName, setRewardName] = useState(rule.rewardName)
+  const [rewardDescription, setRewardDescription] = useState(rule.rewardDescription)
+  const [isActive, setIsActive] = useState(rule.isActive)
+  const [saving, setSaving] = useState(false)
+  const [msg, setMsg] = useState<"success" | "error" | null>(null)
+
+  const isDirty =
+    rewardValue !== String(rule.rewardValue) ||
+    rewardName !== rule.rewardName ||
+    rewardDescription !== rule.rewardDescription ||
+    isActive !== rule.isActive
+
+  const handleSave = () => {
+    const value = Number(rewardValue)
+    if (Number.isNaN(value) || value < 0) {
+      setMsg("error")
+      return
+    }
+    setSaving(true)
+    setMsg(null)
+    fetch("/api/superadmin/invite-rewards", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        id: rule.id,
+        rewardValue: value,
+        rewardName: rewardName.trim() || undefined,
+        rewardDescription: rewardDescription.trim() || null,
+        isActive,
+      }),
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        if (json.success) {
+          onSaved(json.data)
+          setMsg("success")
+        } else {
+          setMsg("error")
+        }
+      })
+      .catch(() => setMsg("error"))
+      .finally(() => setSaving(false))
+  }
+
+  return (
+    <TableRow>
+      <TableCell className="text-xs text-muted-foreground font-medium">
+        {inviteCountLabel(rule.inviteCount)}
+      </TableCell>
+      <TableCell>
+        <span className="text-xs">{rule.rewardType}</span>
+      </TableCell>
+      <TableCell>
+        <Input
+          type="number"
+          min={0}
+          step={rule.rewardType === "balance" ? 0.01 : 1}
+          className="h-8 w-24 text-xs"
+          value={rewardValue}
+          onChange={(e) => setRewardValue(e.target.value)}
+        />
+      </TableCell>
+      <TableCell>
+        <Input
+          className="h-8 text-xs min-w-[120px]"
+          value={rewardName}
+          onChange={(e) => setRewardName(e.target.value)}
+          placeholder="奖励名称"
+        />
+      </TableCell>
+      <TableCell>
+        <Input
+          className="h-8 text-xs min-w-[180px]"
+          value={rewardDescription}
+          onChange={(e) => setRewardDescription(e.target.value)}
+          placeholder="描述"
+        />
+      </TableCell>
+      <TableCell>
+        <Switch checked={isActive} onCheckedChange={setIsActive} disabled={saving} />
+      </TableCell>
+      <TableCell>
+        {isDirty && (
+          <Button
+            size="sm"
+            variant="secondary"
+            className="h-8 text-xs"
+            onClick={handleSave}
+            disabled={saving}
+          >
+            {saving ? <Loader2 className="h-3 w-3 animate-spin" /> : "保存"}
+          </Button>
+        )}
+        {msg === "success" && (
+          <span className="text-xs text-green-600">已保存</span>
+        )}
+        {msg === "error" && (
+          <span className="text-xs text-destructive">失败</span>
+        )}
+      </TableCell>
+    </TableRow>
   )
 }
