@@ -42,11 +42,11 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="zh-CN" suppressHydrationWarning>
+    <html lang="zh-CN" suppressHydrationWarning className="dark">
       <body className={`${inter.variable} font-sans antialiased`} style={{ fontFamily: 'var(--font-family-sans), var(--font-family-cn)' }}>
         <ThemeProvider
           attribute="class"
-          defaultTheme="light"
+          defaultTheme="dark"
           enableSystem={false}
           disableTransitionOnChange={false}
         >

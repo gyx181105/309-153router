@@ -45,8 +45,7 @@ export function Features() {
       }}
     >
       <div 
-        className="mx-auto max-w-7xl px-6"
-        style={{ maxWidth: 'var(--layout-max-width)' }}
+        className="mx-auto px-6"
       >
         {/* Section Header */}
         <div className="mx-auto max-w-2xl text-center">
