@@ -47,17 +47,17 @@ pub struct ModelPricingInfo {
 ///
 /// 由 handler 在拿到 Provider 响应的 usage 数据后构造，
 /// 传给 [`crate::db::pg::bill_in_tx`]。
-pub struct BillArgs<'a> {
+pub struct BillArgs {
     pub user_id:       Uuid,
     pub api_key_id:    Uuid,
     /// 实际调用的模型（写入 usage_logs.model，用于计费与关联 model_pricing）
-    pub model:         &'a str,
+    pub model:         String,
     /// 用户请求的模型（与 model 不同时表示发生了 fallback）
-    pub requested_model: Option<&'a str>,
+    pub requested_model: Option<String>,
     /// 实际调用的提供商（如 "openai" / "anthropic" / "google"）
-    pub provider:     Option<&'a str>,
+    pub provider:     Option<String>,
     /// 请求追踪 ID（可选）
-    pub request_id:   Option<&'a str>,
+    pub request_id:   Option<String>,
     pub input_tokens:  i32,
     pub output_tokens: i32,
     pub total_tokens:  i32,

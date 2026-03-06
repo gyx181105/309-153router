@@ -24,7 +24,7 @@ use crate::{
     middleware::auth::{extract_bearer, sha256_hex},
     protocol::{ChatCompletionRequest, ChatCompletionResponse},
     providers::build_provider,
-    proxy::{StreamUsage, TextOnlyStream, TrailerFn},
+    proxy::{AccountingStream, StreamUsage},
     router::{RouteInfo, RouterState},
 };
 
@@ -36,6 +36,18 @@ pub async fn chat_completions(
     Json(request): Json<ChatCompletionRequest>,
 ) -> AppResult<Response> {
     let start = Instant::now();
+
+    // [临时调试] 打印 Authorization 前10位 和 model
+    let auth_prefix = headers
+        .get("authorization")
+        .and_then(|v| v.to_str().ok())
+        .map(|s| &s[..s.len().min(10)])
+        .unwrap_or("(none)");
+    tracing::info!("[DEBUG] auth_prefix={:?} model={} stream={}", auth_prefix, request.model, request.stream);
+
+    // 过滤 tool/function 消息，避免 OpenAI 报 400
+    let mut request = request;
+    request = request.strip_tool_messages();
 
     let meta = authenticate(&state, &headers).await?;
 
@@ -95,34 +107,78 @@ async fn handle_non_stream(
 
     let upstream_json: serde_json::Value = resp.json().await.map_err(AppError::HttpRequest)?;
     let provider  = build_provider(&route.provider, "", &route.provider_url);
-    let mut chat_resp: ChatCompletionResponse = provider.convert_response(&request.model, &upstream_json);
+    let chat_resp: ChatCompletionResponse = provider.convert_response(&request.model, &upstream_json);
+
+    let mut latency_ms_header = String::new();
+    let mut cost_yuan_header  = String::new();
 
     if let Some(ref usage) = chat_resp.usage {
         // 按实际调用的模型计费（OpenRouter 模式）
         let pricing_actual = db::get_model_pricing(&state.db, &actual_model).await.ok().flatten()
             .unwrap_or(_pricing);
-        let cost = compute_cost(usage.prompt_tokens as i32, usage.completion_tokens as i32, &pricing_actual);
-        db::bill_in_tx(&state.db, BillArgs {
+        let cost    = compute_cost(usage.prompt_tokens as i32, usage.completion_tokens as i32, &pricing_actual);
+        let latency = start.elapsed().as_millis();
+
+        // 存到响应头，不放进 JSON body（避免 OpenClaw 等严格解析器报 unknown field）
+        latency_ms_header = latency.to_string();
+        cost_yuan_header  = cost.to_string();
+
+        // 异步扣费：不阻塞响应，先把结果返回给调用方
+        let db_clone  = state.db.clone();
+        let bill_args = BillArgs {
             user_id:       meta.user_id,
             api_key_id:    meta.api_key_id,
-            model:         &actual_model,
-            requested_model: if actual_model != request.model { Some(request.model.as_str()) } else { None },
-            provider:     Some(actual_provider.as_str()),
+            model:         actual_model.clone(),
+            requested_model: if actual_model != request.model { Some(request.model.clone()) } else { None },
+            provider:     Some(actual_provider.as_str().to_string()),
             request_id:   None,
             input_tokens:  usage.prompt_tokens as i32,
             output_tokens: usage.completion_tokens as i32,
             total_tokens:  usage.total_tokens as i32,
-            cost: cost.clone(),
-            latency_ms: start.elapsed().as_millis() as i32,
-        }).await?;
-        chat_resp.model_latency_ms = Some(start.elapsed().as_millis() as u64);
-        chat_resp.cost_yuan = Some(cost.to_string());
+            cost,
+            latency_ms:    latency as i32,
+        };
+        tokio::spawn(async move {
+            if let Err(e) = db::bill_in_tx(&db_clone, bill_args).await {
+                error!(err = %e, "non-stream billing failed");
+            }
+        });
     }
 
+    // chat_resp 里不再设置 model_latency_ms / cost_yuan，保持严格 OpenAI 格式
     let body = serde_json::to_string(&chat_resp)?;
+
+    // [临时调试] 打印返回给调用方的完整信息
+    {
+        let content_preview = chat_resp.choices.first()
+            .map(|c| {
+                let t = c.message.content.chars().take(40).collect::<String>();
+                format!("string({} chars): {:?}", c.message.content.len(), t)
+            })
+            .unwrap_or_else(|| "choices is empty!".into());
+        let finish_reason = chat_resp.choices.first()
+            .map(|c| c.finish_reason.as_str())
+            .unwrap_or("N/A");
+        let has_error = body.contains("\"error\"");
+        info!(
+            "[DEBUG RESP] status=200 \
+             Content-Type=application/json \
+             X-Model-Latency-Ms={} \
+             X-Cost-Yuan={} \
+             body_len={} \
+             content={} \
+             finish_reason={} \
+             has_error_field={}",
+            latency_ms_header, cost_yuan_header,
+            body.len(), content_preview, finish_reason, has_error
+        );
+    }
+
     Ok(Response::builder()
         .status(StatusCode::OK)
         .header("Content-Type", "application/json")
+        .header("X-Model-Latency-Ms", latency_ms_header)
+        .header("X-Cost-Yuan", cost_yuan_header)
         .body(Body::from(body))
         .unwrap())
 }
@@ -147,16 +203,9 @@ async fn handle_stream(
         r.map(|b| b.to_vec()).map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e))
     });
     let start = start;
-    let pricing_for_trailer = pricing_actual.clone();
-    let trailer_fn: TrailerFn = Some(Box::new(move |u: StreamUsage| {
-        let elapsed_ms = start.elapsed().as_millis();
-        let cost = compute_cost(u.prompt_tokens, u.completion_tokens, &pricing_for_trailer);
-        format!(
-            "\n\n---\n生成时间: {} ms | prompt_tokens: {} | completion_tokens: {} | 费用: {} 元",
-            elapsed_ms, u.prompt_tokens, u.completion_tokens, cost
-        )
-    }));
-    let body_stream = Body::from_stream(TextOnlyStream::new(Box::pin(raw_stream), usage_tx, trailer_fn));
+    // AccountingStream：透明透传原始 SSE 字节（text/event-stream 格式），同时截取 usage 计费
+    // OpenClaw 需要标准 SSE 格式，不能用 TextOnlyStream（那个只输出纯文本）
+    let body_stream = Body::from_stream(AccountingStream::new(Box::pin(raw_stream), usage_tx));
 
     let db_clone   = state.db.clone();
     let model_name = actual_model.clone();
@@ -173,9 +222,9 @@ async fn handle_stream(
                 if let Err(e) = db::bill_in_tx(&db_clone, BillArgs {
                     user_id,
                     api_key_id: key_id,
-                    model: &model_name,
-                    requested_model: if model_name != requested { Some(requested.as_str()) } else { None },
-                    provider: Some(prov_str.as_str()),
+                    model: model_name.clone(),
+                    requested_model: if model_name != requested { Some(requested.clone()) } else { None },
+                    provider: Some(prov_str.clone()),
                     request_id: None,
                     input_tokens:  usage.prompt_tokens,
                     output_tokens: usage.completion_tokens,
@@ -193,7 +242,7 @@ async fn handle_stream(
 
     Ok(Response::builder()
         .status(StatusCode::OK)
-        .header("Content-Type", "text/plain; charset=utf-8")
+        .header("Content-Type", "text/event-stream")
         .header("Cache-Control", "no-cache")
         .header("X-Accel-Buffering", "no")
         .body(body_stream)
@@ -267,4 +316,17 @@ async fn authenticate(state: &RouterState, headers: &HeaderMap) -> AppResult<Api
         return Err(AppError::Authorization(format!("API key is '{}'", meta.status)));
     }
     Ok(meta)
+}
+
+// ─── 调试接口 /debug/echo ─────────────────────────────────────────────────────
+// 返回固定 OpenAI 格式 JSON，用于验证 OpenClaw 能否正常解析响应
+// 验证完成后可删除此接口和 main.rs 里对应的路由注册
+
+pub async fn debug_echo() -> Response {
+    let body = r#"{"id":"debug-echo","object":"chat.completion","created":0,"model":"gpt-4o","choices":[{"index":0,"message":{"role":"assistant","content":"echo ok"},"finish_reason":"stop"}],"usage":{"prompt_tokens":0,"completion_tokens":0,"total_tokens":0}}"#;
+    Response::builder()
+        .status(StatusCode::OK)
+        .header("Content-Type", "application/json")
+        .body(Body::from(body))
+        .unwrap()
 }
