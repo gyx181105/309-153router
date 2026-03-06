@@ -24,7 +24,7 @@ use crate::{
     middleware::auth::{extract_bearer, sha256_hex},
     protocol::{ChatCompletionRequest, ChatCompletionResponse},
     providers::build_provider,
-    proxy::{StreamUsage, TextOnlyStream, TrailerFn},
+    proxy::{AccountingStream, StreamUsage},
     router::{RouteInfo, RouterState},
 };
 
@@ -45,10 +45,8 @@ pub async fn chat_completions(
         .unwrap_or("(none)");
     tracing::info!("[DEBUG] auth_prefix={:?} model={} stream={}", auth_prefix, request.model, request.stream);
 
-    // 强制非流式：OpenClaw 无法解析 SSE，统一走非流式 JSON
-    let mut request = request;
-    request.stream = false;
     // 过滤 tool/function 消息，避免 OpenAI 报 400
+    let mut request = request;
     request = request.strip_tool_messages();
 
     let meta = authenticate(&state, &headers).await?;
@@ -205,9 +203,9 @@ async fn handle_stream(
         r.map(|b| b.to_vec()).map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e))
     });
     let start = start;
-    // trailer 不再追加到流末尾（避免干扰 OpenClaw 等 SSE 解析器）
-    let trailer_fn: TrailerFn = None;
-    let body_stream = Body::from_stream(TextOnlyStream::new(Box::pin(raw_stream), usage_tx, trailer_fn));
+    // AccountingStream：透明透传原始 SSE 字节（text/event-stream 格式），同时截取 usage 计费
+    // OpenClaw 需要标准 SSE 格式，不能用 TextOnlyStream（那个只输出纯文本）
+    let body_stream = Body::from_stream(AccountingStream::new(Box::pin(raw_stream), usage_tx));
 
     let db_clone   = state.db.clone();
     let model_name = actual_model.clone();
@@ -244,7 +242,7 @@ async fn handle_stream(
 
     Ok(Response::builder()
         .status(StatusCode::OK)
-        .header("Content-Type", "text/plain; charset=utf-8")
+        .header("Content-Type", "text/event-stream")
         .header("Cache-Control", "no-cache")
         .header("X-Accel-Buffering", "no")
         .body(body_stream)
