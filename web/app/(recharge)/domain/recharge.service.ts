@@ -12,6 +12,7 @@ import {
 import { getPaymentGatewayClient } from '@/lib/payment-gateway/client'
 import { verifyNotifySign } from '@/lib/payment-gateway/notify-signature'
 import { prisma } from '@/lib/db'
+import { grantInviteRechargeReward } from '@/app/(invite)/domain/invite.service'
 import type {
   CreateRechargeOrderParams,
   CreateRechargeOrderResult,
@@ -143,6 +144,9 @@ async function processPaymentSuccess(
         )::text
       )
     `
+
+    // 邀请奖励：被邀请人首次充值时，给邀请人加余额（仅发一次）
+    await grantInviteRechargeReward(latestOrder.userId, tx)
   })
 }
 

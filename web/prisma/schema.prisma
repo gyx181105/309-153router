@@ -415,11 +415,13 @@ model InviteCode {
 
 // 邀请关系表
 model InviteRelation {
-  id         Int      @id @default(autoincrement())
-  inviterId  String   @map("inviter_id") @db.Uuid
-  inviteeId  String   @map("invitee_id") @db.Uuid
-  inviteCode String   @map("invite_code") @db.VarChar(32)
-  usedAt     String?  @map("used_at")
+  id         Int       @id @default(autoincrement())
+  inviterId  String    @map("inviter_id") @db.Uuid
+  inviteeId  String    @map("invitee_id") @db.Uuid
+  inviteCode String    @map("invite_code") @db.VarChar(32)
+  usedAt     String?   @map("used_at")
+  /// 被邀请人首充奖励已发放时间（仅发放一次，直接加邀请人余额）
+  rechargeRewardGrantedAt DateTime? @map("recharge_reward_granted_at")
 
   // 关系
   inviter    User     @relation("invite_relation_inviter_idTousers", fields: [inviterId], references: [id], onDelete: Cascade)

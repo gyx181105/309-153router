@@ -18,8 +18,12 @@ import {
   getUserRewardRecords,
   getInviteStats,
   getDailyInviteStats,
+  getInviteRelationForRechargeReward,
+  markRechargeRewardGranted,
+  getInviteRechargeRewardAmount,
 } from './invite.repo'
 import { prisma } from '@/lib/db'
+import { Prisma } from '@prisma/client'
 import type { HandleInviteCodeParams, HandleInviteCodeResult } from './invite.types'
 import type { InviteCode, InvitedUser, InviteStats, DailyStat, RewardRule, MyReward } from './invite.types'
 
@@ -287,6 +291,48 @@ export async function checkAndGrantRewards(userId: string) {
     message: grantedRewards.length > 0 ? `已发放 ${grantedRewards.length} 项奖励` : '暂无新奖励',
     granted_rewards: grantedRewards,
   }
+}
+
+/**
+ * 被邀请人首次充值时，给邀请人加余额奖励（在充值事务内调用，保证原子性）
+ * 仅对「未发放过首充奖励」的邀请关系发放一次。
+ */
+export async function grantInviteRechargeReward(
+  inviteeUserId: string,
+  tx: Prisma.TransactionClient
+): Promise<void> {
+  const relation = await getInviteRelationForRechargeReward(inviteeUserId, tx)
+  if (!relation) return
+
+  const amountDecimal = await getInviteRechargeRewardAmount(tx)
+  if (amountDecimal <= 0) return
+
+  const amount = new Prisma.Decimal(amountDecimal)
+  const now = new Date()
+
+  await tx.userBalance.upsert({
+    where: { userId: relation.inviterId },
+    create: {
+      userId: relation.inviterId,
+      balance: amount,
+      updatedAt: now,
+    },
+    update: {
+      balance: { increment: amount },
+      updatedAt: now,
+    },
+  })
+
+  await tx.transaction.create({
+    data: {
+      userId: relation.inviterId,
+      amount,
+      type: 'adjustment',
+      description: '邀请奖励-被邀请人首充',
+    },
+  })
+
+  await markRechargeRewardGranted(relation.id, now, tx)
 }
 
 /**

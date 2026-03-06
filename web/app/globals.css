@@ -74,14 +74,15 @@
   --layout-section-spacing-mobile: 48px;
 
   /* 白黑灰配色方案 (保持兼容性) */
+  /* primary 使用品牌色，Tailwind 的 bg-primary / 主按钮会自然跟随 */
+  --primary: var(--color-brand);
+  --primary-foreground: oklch(1 0 0);      /* 白色文字 */
   --background: oklch(1 0 0);              /* 白色背景 */
   --foreground: oklch(0.1 0 0);           /* 黑色文字 */
   --card: oklch(0.98 0 0);                 /* 浅灰卡片 */
   --card-foreground: oklch(0.1 0 0);      /* 黑色文字 */
   --popover: oklch(0.98 0 0);              /* 浅灰弹出层 */
   --popover-foreground: oklch(0.1 0 0);    /* 黑色文字 */
-  --primary: oklch(0.1 0 0);               /* 黑色主色 */
-  --primary-foreground: oklch(1 0 0);      /* 白色文字 */
   --secondary: oklch(0.95 0 0);            /* 浅灰次要 */
   --secondary-foreground: oklch(0.2 0 0);  /* 深灰文字 */
   --muted: oklch(0.96 0 0);                /* 浅灰静音 */
@@ -183,14 +184,15 @@
   --shadow-card-hover: 0 10px 28px rgba(0,0,0,0.50);
 
   /* OKLCH colors for dark mode (shadcn/ui) */
+  /* primary 使用品牌色，与亮色一致 */
+  --primary: var(--color-brand);
+  --primary-foreground: oklch(1 0 0);      /* 白色文字 */
   --background: oklch(0.03 0 0);              /* near-black */
   --foreground: oklch(0.95 0 0);            /* white text */
   --card: oklch(0.05 0 0);                   /* dark card */
   --card-foreground: oklch(0.95 0 0);        /* white text */
   --popover: oklch(0.05 0 0);                /* dark popover */
   --popover-foreground: oklch(0.95 0 0);    /* white text */
-  --primary: oklch(0.95 0 0);                /* white primary */
-  --primary-foreground: oklch(0.1 0 0);     /* black text */
   --secondary: oklch(0.15 0 0);             /* dark secondary */
   --secondary-foreground: oklch(0.95 0 0); /* white text */
   --muted: oklch(0.15 0 0);                  /* dark muted */
@@ -250,11 +252,10 @@ html, body {
   border-color: rgba(255,255,255,0.22);
 }
 
+/* 主按钮：只补形状/动效，颜色由 Tailwind bg-primary 提供（--primary = --color-brand） */
 .ds-btn-primary,
 button.ds-btn-primary,
 [data-slot="button"].ds-btn-primary {
-  background: var(--color-button-primary-bg) !important;
-  color: var(--color-button-primary-text) !important;
   border-radius: var(--radius-pill);
   padding: 14px 28px;
   font-weight: 600;
@@ -266,7 +267,7 @@ button.ds-btn-primary,
 .ds-btn-primary:hover,
 button.ds-btn-primary:hover,
 [data-slot="button"].ds-btn-primary:hover {
-  background: var(--color-button-primary-hover) !important;
+  background: var(--color-brand-hover) !important; /* 覆盖 Tailwind 的 hover:bg-primary/90 */
 }
 .ds-btn-primary:active {
   transform: scale(0.99);
@@ -323,15 +324,4 @@ button.ds-btn-primary:hover,
   color: var(--color-text-muted);
   letter-spacing: 0.05em;
   text-transform: uppercase;
-}
-
-/* 强制主按钮颜色（与 --color-brand 一致） */
-button.ds-btn-primary,
-[data-slot="button"].ds-btn-primary {
-  background: var(--color-brand) !important;
-  color: #fff !important;
-}
-button.ds-btn-primary:hover,
-[data-slot="button"].ds-btn-primary:hover {
-  background: var(--color-brand-hover) !important;
 }
