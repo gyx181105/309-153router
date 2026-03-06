@@ -1,3 +1,4 @@
+import Link from "next/link"
 import { Check } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
@@ -28,7 +29,7 @@ const plans = [
       "优先级支持",
       "高级分析仪表盘",
       "API 速率限制 100 RPM",
-      "团队成员管理",
+      "智能路由配置",
       "Webhook 集成",
     ],
     cta: "开始试用",
@@ -192,19 +193,21 @@ export function Pricing() {
                 ))}
               </ul>
 
-              <Button
-                className={`mt-8 w-full ${plan.popular ? 'ds-btn-primary' : ''}`}
-                variant={plan.popular ? "default" : "outline"}
-                style={{
-                  marginTop: 'var(--space-6)',
-                  ...(plan.popular ? {} : {
-                    borderColor: 'var(--color-button-secondary-border)',
-                    color: 'var(--color-button-secondary-text)',
-                  }),
-                }}
-              >
-                {plan.cta}
-              </Button>
+              <Link href="/login" className="block mt-8">
+                <Button
+                  className={`w-full ${plan.popular ? 'ds-btn-primary' : ''}`}
+                  variant={plan.popular ? "default" : "outline"}
+                  style={{
+                    marginTop: 'var(--space-6)',
+                    ...(plan.popular ? {} : {
+                      borderColor: 'var(--color-button-secondary-border)',
+                      color: 'var(--color-button-secondary-text)',
+                    }),
+                  }}
+                >
+                  {plan.cta}
+                </Button>
+              </Link>
             </div>
           ))}
         </div>

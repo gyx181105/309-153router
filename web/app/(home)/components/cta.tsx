@@ -1,3 +1,4 @@
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { ArrowRight } from "lucide-react"
 
@@ -52,17 +53,19 @@ export function CTA() {
               className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row"
               style={{ marginTop: 'var(--space-6)' }}
             >
-              <Button 
-                size="lg" 
-                className="ds-btn-primary"
-                style={{
-                  height: '48px',
-                  padding: '14px 28px',
-                }}
-              >
-                免费开始使用
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
+              <Link href="/login">
+                <Button 
+                  size="lg" 
+                  className="ds-btn-primary"
+                  style={{
+                    height: '48px',
+                    padding: '14px 28px',
+                  }}
+                >
+                  免费开始使用
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
               <Button 
                 size="lg" 
                 variant="outline"
@@ -73,7 +76,7 @@ export function CTA() {
                   color: 'var(--color-button-secondary-text)',
                 }}
               >
-                预约演示
+                查看文档
               </Button>
             </div>
           </div>

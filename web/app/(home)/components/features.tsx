@@ -1,35 +1,35 @@
-import { Zap, Shield, Globe, Code, BarChart3, Layers } from "lucide-react"
+import { Zap, Shield, Globe, Code, BarChart3, Route } from "lucide-react"
 
 const features = [
   {
+    icon: Route,
+    title: "智能路由",
+    description: "自动选择最优模型，支持 fallback 自动切换。根据延迟、成本或性能智能路由，确保服务高可用。",
+  },
+  {
+    icon: Code,
+    title: "OpenAI 兼容",
+    description: "完全兼容 OpenAI API 格式，一行代码切换。支持所有 OpenAI SDK、LangChain、LlamaIndex 等框架。",
+  },
+  {
+    icon: Globe,
+    title: "统一接口",
+    description: "一个 API 访问 OpenAI、Anthropic、Google、Meta 等 50+ 顶尖 AI 模型，无需管理多个密钥。",
+  },
+  {
     icon: Zap,
-    title: "极速响应",
-    description: "全球分布式边缘网络，平均延迟低于 50ms，确保您的应用始终快速响应。",
+    title: "高性能网关",
+    description: "基于 Rust 的高性能网关，支持流式响应、高并发代理。平均延迟低于 50ms，确保快速响应。",
+  },
+  {
+    icon: BarChart3,
+    title: "统一计费",
+    description: "详细的用量统计、成本分析和性能指标。统一账单管理，让您对 AI 支出了如指掌。",
   },
   {
     icon: Shield,
     title: "企业级安全",
-    description: "SOC 2 Type II 认证，端到端加密，数据隔离存储，满足最严格的合规要求。",
-  },
-  {
-    icon: Globe,
-    title: "全球覆盖",
-    description: "支持 50+ 顶尖 AI 模型，覆盖文本、图像、音频、视频等多种模态。",
-  },
-  {
-    icon: Code,
-    title: "简单集成",
-    description: "兼容 OpenAI SDK，一行代码切换模型提供商，无需重写现有代码。",
-  },
-  {
-    icon: BarChart3,
-    title: "实时监控",
-    description: "详细的用量统计、成本分析和性能指标，让您对 AI 支出了如指掌。",
-  },
-  {
-    icon: Layers,
-    title: "智能路由",
-    description: "自动负载均衡和故障转移，根据延迟、成本或性能智能选择最优模型。",
+    description: "API Key 管理、权限控制、数据隔离。满足企业级安全要求，支持私有部署。",
   },
 ]
 
@@ -69,7 +69,7 @@ export function Features() {
               marginTop: 'var(--space-4)',
             }}
           >
-            我们提供业界领先的 AI 聚合平台，让您专注于产品创新
+            AI 模型的统一入口，让您专注于产品创新，无需管理复杂的模型接入
           </p>
         </div>
 

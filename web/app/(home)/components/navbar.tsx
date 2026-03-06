@@ -4,7 +4,7 @@ import { useState } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Menu, X } from "lucide-react"
-import { ThemeToggle } from "@/components/theme-toggle"
+import { ThemeToggle } from "./theme-toggle"
 
 const navLinks = [
   { href: "#models", label: "模型" },
@@ -73,25 +73,29 @@ export function Navbar() {
 
         {/* Desktop Actions */}
         <div className="hidden items-center gap-3 md:flex">
-          <Button 
-            variant="ghost" 
-            size="sm"
-            style={{
-              color: 'var(--color-text-body)',
-            }}
-          >
-            登录
-          </Button>
-          <Button 
-            size="sm"
-            className="ds-btn-primary"
-            style={{
-              padding: '10px 20px',
-              fontSize: '14px',
-            }}
-          >
-            开始使用
-          </Button>
+          <Link href="/login">
+            <Button 
+              variant="ghost" 
+              size="sm"
+              style={{
+                color: 'var(--color-text-body)',
+              }}
+            >
+              登录
+            </Button>
+          </Link>
+          <Link href="/login">
+            <Button 
+              size="sm"
+              className="ds-btn-primary"
+              style={{
+                padding: '10px 20px',
+                fontSize: '14px',
+              }}
+            >
+              开始使用
+            </Button>
+          </Link>
           <ThemeToggle />
         </div>
 
@@ -144,21 +148,25 @@ export function Navbar() {
               </Link>
             ))}
             <div className="mt-4 flex flex-col gap-3">
-              <Button 
-                variant="outline" 
-                className="w-full"
-                style={{
-                  borderColor: 'var(--color-button-secondary-border)',
-                  color: 'var(--color-button-secondary-text)',
-                }}
-              >
-                登录
-              </Button>
-              <Button 
-                className="w-full ds-btn-primary"
-              >
-                开始使用
-              </Button>
+              <Link href="/login" className="w-full">
+                <Button 
+                  variant="outline" 
+                  className="w-full"
+                  style={{
+                    borderColor: 'var(--color-button-secondary-border)',
+                    color: 'var(--color-button-secondary-text)',
+                  }}
+                >
+                  登录
+                </Button>
+              </Link>
+              <Link href="/login" className="w-full">
+                <Button 
+                  className="w-full ds-btn-primary"
+                >
+                  开始使用
+                </Button>
+              </Link>
             </div>
           </div>
         </div>

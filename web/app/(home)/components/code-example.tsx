@@ -4,14 +4,16 @@ import { useState } from "react"
 import { Copy, Check } from "lucide-react"
 
 const codeExamples = {
-  javascript: `import { OptRouter } from 'optrouter';
+  javascript: `// 完全兼容 OpenAI SDK
+import OpenAI from 'openai';
 
-const client = new OptRouter({
+const client = new OpenAI({
+  baseURL: 'https://api.optrouter.com/v1',
   apiKey: process.env.OPTROUTER_API_KEY,
 });
 
 const response = await client.chat.completions.create({
-  model: 'openai/gpt-4-turbo',
+  model: 'gpt-4o',
   messages: [
     { role: 'user', content: '你好，请介绍一下你自己' }
   ],
@@ -19,14 +21,16 @@ const response = await client.chat.completions.create({
 
 console.log(response.choices[0].message.content);`,
 
-  python: `from optrouter import OptRouter
+  python: `# 使用 OpenAI Python SDK
+from openai import OpenAI
 
-client = OptRouter(
+client = OpenAI(
+    base_url="https://api.optrouter.com/v1",
     api_key=os.environ.get("OPTROUTER_API_KEY"),
 )
 
 response = client.chat.completions.create(
-    model="anthropic/claude-3-opus",
+    model="claude-3-5-sonnet",
     messages=[
         {"role": "user", "content": "你好，请介绍一下你自己"}
     ],
@@ -38,10 +42,11 @@ print(response.choices[0].message.content)`,
   -H "Content-Type: application/json" \\
   -H "Authorization: Bearer $OPTROUTER_API_KEY" \\
   -d '{
-    "model": "google/gemini-pro",
+    "model": "gpt-4o",
     "messages": [
       {"role": "user", "content": "你好，请介绍一下你自己"}
-    ]
+    ],
+    "stream": true
   }'`,
 }
 
@@ -96,8 +101,8 @@ export function CodeExample() {
                 color: 'var(--color-text-body)',
               }}
             >
-              兼容 OpenAI SDK 格式，只需更改一行代码即可切换到 OptRouter。
-              无缝迁移，无需重写现有业务逻辑。
+              完全兼容 OpenAI API 格式，只需更改 baseURL 即可切换到 OptRouter。
+              支持所有 OpenAI SDK、LangChain、LlamaIndex 等框架。
             </p>
             <ul 
               className="mt-8 space-y-4"
@@ -106,7 +111,7 @@ export function CodeExample() {
               {[
                 "完全兼容 OpenAI API 格式",
                 "支持流式响应和函数调用",
-                "自动重试和错误处理",
+                "智能路由与自动 fallback",
                 "详细的 TypeScript 类型定义",
               ].map((item) => (
                 <li key={item} className="flex items-center gap-3">

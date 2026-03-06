@@ -1,5 +1,6 @@
 "use client"
 
+import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { ArrowRight, Copy, Check } from "lucide-react"
 import { useState } from "react"
@@ -8,7 +9,7 @@ export function Hero() {
   const [copied, setCopied] = useState(false)
 
   const copyCommand = () => {
-    navigator.clipboard.writeText("npm install optrouter")
+    navigator.clipboard.writeText("curl https://api.optrouter.com/v1/chat/completions -H 'Authorization: Bearer YOUR_API_KEY' -d '{\"model\":\"gpt-4o\",\"messages\":[{\"role\":\"user\",\"content\":\"Hello\"}]}'")
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
   }
@@ -37,10 +38,10 @@ export function Hero() {
             maxWidth: '900px',
           }}
         >
-          一个 API
+          AI 模型的
           <br />
           <span style={{ color: 'var(--color-text-secondary)' }}>
-            连接所有 AI 模型
+            统一入口
           </span>
         </h1>
 
@@ -55,26 +56,28 @@ export function Hero() {
             marginBottom: 'var(--space-9)',
           }}
         >
-          统一接口访问 OpenAI、Anthropic、Google、Meta 等顶尖 AI 模型。
-          简化开发流程，按需付费，无需管理多个 API 密钥。
+          一个 API 调用所有 AI 模型。兼容 OpenAI 格式，支持智能路由与自动切换。
+          简化开发，统一计费，无需管理多个 API 密钥。
         </p>
 
         {/* CTA Buttons */}
         <div className="flex flex-col items-center gap-4 sm:flex-row">
-          <Button 
-            size="lg" 
-            className="ds-btn-primary"
-            style={{
-              height: '48px',
-              padding: '14px 28px',
-              fontSize: '16px',
-            }}
-          >
-            免费开始
-            <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
+          <Link href="/login">
+            <Button 
+              size="lg" 
+              className="ds-btn-primary"
+              style={{
+                height: '48px',
+                padding: '14px 28px',
+                fontSize: '16px',
+              }}
+            >
+              免费开始
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          </Link>
           
-          {/* Install Command */}
+          {/* API Example */}
           <button
             onClick={copyCommand}
             className="flex h-12 items-center gap-3 rounded-lg border px-4 font-mono text-sm transition-colors hover:border-foreground/20"
@@ -86,7 +89,8 @@ export function Hero() {
             }}
           >
             <span style={{ color: 'var(--color-text-muted)' }}>$</span>
-            <span>npm install optrouter</span>
+            <span className="hidden sm:inline">curl api.optrouter.com/v1/chat/completions</span>
+            <span className="sm:hidden">查看 API 示例</span>
             {copied ? (
               <Check className="h-4 w-4" style={{ color: 'var(--color-accent-primary)' }} />
             ) : (
@@ -104,15 +108,15 @@ export function Hero() {
             fontSize: '14px', 
             color: 'var(--color-text-muted)',
           }}>
-            受到全球领先企业信赖
+            兼容 OpenAI API，支持所有主流 AI 框架
           </p>
           <div 
             className="flex flex-wrap items-center justify-center gap-x-12 gap-y-6"
             style={{ opacity: 0.5 }}
           >
-            {["Vercel", "Stripe", "Notion", "Linear", "Figma"].map((company) => (
+            {["OpenAI SDK", "LangChain", "LlamaIndex", "Vercel AI", "Next.js"].map((tech) => (
               <span 
-                key={company} 
+                key={tech} 
                 style={{
                   fontSize: '16px',
                   fontWeight: 600,
@@ -120,7 +124,7 @@ export function Hero() {
                   color: 'var(--color-text-secondary)',
                 }}
               >
-                {company}
+                {tech}
               </span>
             ))}
           </div>

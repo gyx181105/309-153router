@@ -81,7 +81,7 @@ export function Footer() {
                 color: 'var(--color-text-body)',
               }}
             >
-              一个 API 连接所有 AI 模型。简化开发，按需付费。
+              AI 模型的统一入口。一个 API 连接所有 AI 模型，简化开发，按需付费。
             </p>
             <div 
               className="mt-6 flex gap-4"

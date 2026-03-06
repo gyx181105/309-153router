@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { Check, ArrowUpRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import Link from "next/link"
 
 const modelCategories = [
   { id: "all", label: "全部" },
@@ -14,6 +15,15 @@ const modelCategories = [
 
 const models = [
   {
+    name: "GPT-4o",
+    provider: "OpenAI",
+    category: "text",
+    contextLength: "128K",
+    inputPrice: "$2.50",
+    outputPrice: "$10.00",
+    features: ["函数调用", "JSON 模式", "视觉理解"],
+  },
+  {
     name: "GPT-4 Turbo",
     provider: "OpenAI",
     category: "text",
@@ -21,6 +31,15 @@ const models = [
     inputPrice: "$10.00",
     outputPrice: "$30.00",
     features: ["函数调用", "JSON 模式", "视觉理解"],
+  },
+  {
+    name: "Claude 3.5 Sonnet",
+    provider: "Anthropic",
+    category: "text",
+    contextLength: "200K",
+    inputPrice: "$3.00",
+    outputPrice: "$15.00",
+    features: ["长文本", "多语言", "代码生成"],
   },
   {
     name: "Claude 3 Opus",
@@ -67,24 +86,6 @@ const models = [
     outputPrice: "/图",
     features: ["开源", "LoRA", "ControlNet"],
   },
-  {
-    name: "Code Llama 70B",
-    provider: "Meta",
-    category: "code",
-    contextLength: "16K",
-    inputPrice: "$0.70",
-    outputPrice: "$0.90",
-    features: ["代码补全", "多语言", "开源"],
-  },
-  {
-    name: "text-embedding-3",
-    provider: "OpenAI",
-    category: "embedding",
-    contextLength: "8K",
-    inputPrice: "$0.13",
-    outputPrice: "/M tokens",
-    features: ["高维度", "多语言", "检索优化"],
-  },
 ]
 
 export function Models() {
@@ -120,7 +121,7 @@ export function Models() {
                 color: 'var(--color-text-primary)',
               }}
             >
-              模型列表
+              支持的 AI 模型
             </h2>
             <p 
               style={{
@@ -129,20 +130,22 @@ export function Models() {
                 color: 'var(--color-text-body)',
               }}
             >
-              访问 50+ 全球顶尖 AI 模型，统一 API 格式
+              访问 50+ 全球顶尖 AI 模型，统一 API 格式，智能路由选择
             </p>
           </div>
-          <Button 
-            variant="outline" 
-            className="gap-2"
-            style={{
-              borderColor: 'var(--color-button-secondary-border)',
-              color: 'var(--color-button-secondary-text)',
-            }}
-          >
-            查看全部模型
-            <ArrowUpRight className="h-4 w-4" />
-          </Button>
+          <Link href="/login">
+            <Button 
+              variant="outline" 
+              className="gap-2"
+              style={{
+                borderColor: 'var(--color-button-secondary-border)',
+                color: 'var(--color-button-secondary-text)',
+              }}
+            >
+              查看全部模型
+              <ArrowUpRight className="h-4 w-4" />
+            </Button>
+          </Link>
         </div>
 
         {/* Category Tabs */}
