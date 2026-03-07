@@ -13,8 +13,7 @@ export function CTA() {
       }}
     >
       <div 
-        className="mx-auto max-w-7xl px-6"
-        style={{ maxWidth: 'var(--layout-max-width)' }}
+        className="mx-auto px-6"
       >
         <div 
           className="relative overflow-hidden rounded-2xl border px-8 py-16 text-center sm:px-16"

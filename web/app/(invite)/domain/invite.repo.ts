@@ -94,6 +94,90 @@ export async function updateInviteCodeUsedCount(inviteCodeId: number, usedCount:
 }
 
 /**
+ * 获取邀请首充奖励金额（元），从 invite_reward_rule 读取
+ * 约定：invite_count=0 且 reward_type='balance' 表示该规则，reward_value 直接为金额（元）
+ * 若未配置或未启用则返回 0
+ */
+export async function getInviteRechargeRewardAmount(
+  tx?: Pick<typeof prisma, 'inviteRewardRule'>
+): Promise<number> {
+  const client = tx ?? prisma
+  const row = await client.inviteRewardRule.findUnique({
+    where: { inviteCount: 0 },
+    select: { rewardType: true, rewardValue: true, isActive: true },
+  })
+  if (!row || !row.isActive || row.rewardType !== 'balance') return 0
+  return row.rewardValue
+}
+
+/**
+ * 获取「被邀请人首充」奖励规则（供 superadmin 设置页使用）
+ */
+export async function getRechargeRewardRuleForAdmin() {
+  return prisma.inviteRewardRule.findUnique({
+    where: { inviteCount: 0 },
+    select: { id: true, inviteCount: true, rewardType: true, rewardValue: true, rewardName: true, isActive: true },
+  })
+}
+
+/**
+ * 获取所有邀请奖励规则（供 superadmin 列表/编辑）
+ */
+export async function getInviteRewardRulesForAdmin() {
+  return prisma.inviteRewardRule.findMany({
+    orderBy: { inviteCount: 'asc' },
+    select: {
+      id: true,
+      inviteCount: true,
+      rewardType: true,
+      rewardValue: true,
+      rewardName: true,
+      rewardDescription: true,
+      isActive: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+  })
+}
+
+/**
+ * 按 id 更新单条邀请奖励规则
+ */
+export async function updateInviteRewardRuleById(
+  id: number,
+  data: { rewardValue?: number; rewardName?: string; rewardDescription?: string | null; isActive?: boolean }
+) {
+  const updateData: Record<string, unknown> = {}
+  if (typeof data.rewardValue === 'number') updateData.rewardValue = data.rewardValue
+  if (typeof data.rewardName === 'string') updateData.rewardName = data.rewardName
+  if (data.rewardDescription !== undefined) updateData.rewardDescription = data.rewardDescription
+  if (typeof data.isActive === 'boolean') updateData.isActive = data.isActive
+  if (Object.keys(updateData).length === 0) {
+    return prisma.inviteRewardRule.findUnique({ where: { id } })
+  }
+  return prisma.inviteRewardRule.update({
+    where: { id },
+    data: updateData,
+  })
+}
+
+/**
+ * 更新「被邀请人首充」奖励规则（reward_value 单位：元）
+ */
+export async function updateRechargeRewardRuleForAdmin(data: { rewardValue?: number; isActive?: boolean }) {
+  const updateData: { rewardValue?: number; isActive?: boolean } = {}
+  if (typeof data.rewardValue === 'number') updateData.rewardValue = data.rewardValue
+  if (typeof data.isActive === 'boolean') updateData.isActive = data.isActive
+  if (Object.keys(updateData).length === 0) {
+    return prisma.inviteRewardRule.findUnique({ where: { inviteCount: 0 } })
+  }
+  return prisma.inviteRewardRule.update({
+    where: { inviteCount: 0 },
+    data: updateData,
+  })
+}
+
+/**
  * 获取用户的邀请关系列表
  */
 export async function getUserInviteRelations(userId: string) {
@@ -109,6 +193,39 @@ export async function getUserInviteRelations(userId: string) {
         },
       },
     },
+  })
+}
+
+/**
+ * 查询可发放「被邀请人首充」奖励的邀请关系（未发放过且 invitee 为指定用户）
+ * 用于在 invitee 首次充值时给 inviter 加余额
+ */
+export async function getInviteRelationForRechargeReward(
+  inviteeUserId: string,
+  tx?: Pick<typeof prisma, 'inviteRelation'>
+) {
+  const client = tx ?? prisma
+  return client.inviteRelation.findFirst({
+    where: {
+      inviteeId: inviteeUserId,
+      rechargeRewardGrantedAt: null,
+    },
+    orderBy: { id: 'asc' },
+  })
+}
+
+/**
+ * 标记邀请关系已发放被邀请人首充奖励
+ */
+export async function markRechargeRewardGranted(
+  relationId: number,
+  grantedAt: Date,
+  tx?: Pick<typeof prisma, 'inviteRelation'>
+) {
+  const client = tx ?? prisma
+  return client.inviteRelation.update({
+    where: { id: relationId },
+    data: { rechargeRewardGrantedAt: grantedAt },
   })
 }
 

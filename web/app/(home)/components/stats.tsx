@@ -16,8 +16,7 @@ export function Stats() {
       }}
     >
       <div 
-        className="mx-auto max-w-7xl px-6"
-        style={{ maxWidth: 'var(--layout-max-width)' }}
+        className="mx-auto px-6"
       >
         <div className="grid grid-cols-2 gap-8 lg:grid-cols-4">
           {stats.map((stat) => (

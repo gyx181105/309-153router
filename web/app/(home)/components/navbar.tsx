@@ -27,7 +27,6 @@ export function Navbar() {
     >
       <nav 
         className="mx-auto flex h-16 items-center justify-between px-6"
-        style={{ maxWidth: 'var(--layout-max-width)' }}
       >
         {/* Logo */}
         <Link 
@@ -87,11 +86,7 @@ export function Navbar() {
           <Link href="/login">
             <Button 
               size="sm"
-              className="ds-btn-primary"
-              style={{
-                padding: '10px 20px',
-                fontSize: '14px',
-              }}
+              className="ds-btn-primary px-4 py-2 text-xs"
             >
               开始使用
             </Button>

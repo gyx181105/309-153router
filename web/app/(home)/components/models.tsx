@@ -107,8 +107,7 @@ export function Models() {
       }}
     >
       <div 
-        className="mx-auto max-w-7xl px-6"
-        style={{ maxWidth: 'var(--layout-max-width)' }}
+        className="mx-auto px-6"
       >
         {/* Section Header */}
         <div className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end">
