@@ -59,6 +59,7 @@ pub fn build_app(state: router::RouterState) -> Router {
         .route("/v1/models/{model}/pricing", get(api::models::get_model_pricing))
         .route("/v1/chat/completions",       post(api::chat::chat_completions))
         .route("/v1/usage",                  get(api::usage::get_usage_stats))
+        .route("/v1/admin/config/reload",    post(api::admin::reload_config))
         .route("/debug/echo",                post(api::chat::debug_echo).get(api::chat::debug_echo))
         .with_state(state)
         .layer(cors)
@@ -90,9 +91,15 @@ pub async fn run() {
     let redis = bootstrap::connect_redis(&redis_url).await;
 
     let state = build_state(db, redis, Some(&toml_cfg));
+    
+    // 从数据库初始化路由表
+    if let Err(e) = state.init_model_router().await {
+        tracing::error!("Failed to initialize model router from DB: {e}");
+        std::process::exit(1);
+    }
+
     let model_count        = state.model_router.list_models().await.len();
     let models_by_provider = state.model_router.models_by_provider().await;
-    let registry_path      = std::env::var("REGISTRY_CONFIG").unwrap_or_else(|_| "config/models.toml".into());
 
     let upstream_results = healthcheck::check_upstreams(state.config.clone()).await;
     let app = build_app(state);
@@ -116,7 +123,7 @@ pub async fn run() {
 
     let api_ok = healthcheck::check_api_reachable(port).await;
     healthcheck::print_startup_summary(
-        addr, model_count, &registry_path,
+        addr, model_count, "Database (model_pricing table)",
         &upstream_results, &models_by_provider, api_ok,
     );
 

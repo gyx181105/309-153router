@@ -2,51 +2,27 @@
 //!
 //! [`ModelRouter`] 接受一个模型 ID，返回应该路由到哪个 Provider、
 //! 用哪个 URL、以及 fallback 配置。
-//!
-//! # 路由决策逻辑
-//!
-//! ```text
-//! request.model = "gpt-4o"
-//!       ↓
-//! ModelRouter::route("gpt-4o")
-//!       ↓
-//! RouteInfo { provider: OpenAI, provider_url: "https://api.openai.com/v1", ... }
-//! ```
-//!
-//! # Fallback
-//!
-//! 主 Provider 失败时，handler 检查 `RouteInfo.fallback_*` 字段，
-//! 如果配置了 fallback，则用 fallback 信息重新构造请求。
-//!
-//! fallback 通常由 `registry::build_default_registry()` 在启动时设置，
-//! 也可通过 `set_fallback()` 运行时动态更新（如从数据库读取策略）。
 
 use std::{collections::HashMap, sync::Arc};
 use tokio::sync::RwLock;
 
+use super::types::{ModelTier, ModelCapability, RequestProfile, RoutingDecision, SessionSummary};
+use super::strategy::{CoarseRouter, ContextualRouter, RefinedRouter};
+
 // ─── Provider 类型 ────────────────────────────────────────────────────────────
 
 /// AI Provider 类型枚举。
-///
-/// 决定了上游 API 的 URL 格式、认证方式、请求体格式、响应解析逻辑。
 #[derive(Debug, Clone, PartialEq)]
 pub enum ProviderType {
-    /// OpenAI 及兼容接口（Together AI、Groq、Anyscale 等）
     OpenAI,
-    /// Anthropic Claude
     Anthropic,
-    /// Google Gemini
     Google,
-    /// Together AI（OpenAI 兼容）
     Together,
-    /// Ollama 本地/自托管（OpenAI 兼容，通常无需 API Key）
     Ollama,
-    /// 路由表中未找到的模型（fallback 到默认 Provider）
     Unknown,
 }
 
 impl ProviderType {
-    /// 用于写入 usage_logs.provider 等
     pub fn as_str(&self) -> &'static str {
         match self {
             ProviderType::OpenAI => "openai",
@@ -67,6 +43,11 @@ pub struct RouteInfo {
     pub model:                 String,
     pub provider_url:          String,
     pub provider:              ProviderType,
+    pub tier:                  ModelTier,
+    pub capability:            ModelCapability,
+    pub input_price_per_1k:    f64,
+    pub output_price_per_1k:   f64,
+    pub is_virtual:            bool, // 是否是虚拟模型（如 auto, eco），虚拟模型不参与最终执行
     pub fallback_model:        Option<String>,
     pub fallback_provider_url: Option<String>,
     pub fallback_provider:     Option<ProviderType>,
@@ -74,13 +55,25 @@ pub struct RouteInfo {
 
 // ─── ModelRouter ─────────────────────────────────────────────────────────────
 
+/// 智能路由结果
+pub enum IntelligentRouteResult {
+    /// 已决定路由
+    Routed(RouteInfo, RoutingDecision),
+    /// 需要 Layer 3 小模型复判
+    NeedsRefinement(String, String), // (分类模型名, 分类 Prompt)
+    /// 走传统静态路由
+    Static(RouteInfo),
+}
+
 /// 内存路由表：模型 ID → [`RouteInfo`]
-///
-/// 使用 `Arc<RwLock<HashMap>>` 支持运行时动态更新（如从 DB 热加载路由策略）。
 #[derive(Clone)]
 pub struct ModelRouter {
     routes:              Arc<RwLock<HashMap<String, RouteInfo>>>,
     default_provider_url: String,
+    coarse_router:       Arc<CoarseRouter>,
+    contextual_router:   Arc<ContextualRouter>,
+    refined_router:     Arc<RefinedRouter>,
+    pub summary_model:  String,
 }
 
 impl ModelRouter {
@@ -91,27 +84,135 @@ impl ModelRouter {
         Self {
             routes:               Arc::new(RwLock::new(routes)),
             default_provider_url,
+            coarse_router:       Arc::new(CoarseRouter::default()),
+            contextual_router:   Arc::new(ContextualRouter::default()),
+            refined_router:     Arc::new(RefinedRouter::default()),
+            summary_model:      "gpt-4o-mini".to_string(),
         }
     }
 
-    /// 查询模型路由。
-    ///
-    /// 路由表中没有的模型返回默认路由（`ProviderType::Unknown`，指向 openai_base_url），
-    /// 允许兼容接口直接透传。
+    /// 全量更新路由表
+    pub async fn update_routes(&self, new_routes: HashMap<String, RouteInfo>) {
+        let mut routes = self.routes.write().await;
+        *routes = new_routes;
+    }
+
+    /// 智能路由主入口
+    pub async fn intelligent_route(
+        &self, 
+        profile: &RequestProfile, 
+        summary: Option<&SessionSummary>,
+        raw_message: &str,
+        force_routing: bool,
+    ) -> IntelligentRouteResult {
+        // 1. 尝试 Layer 1 粗路由
+        if let Some(decision) = self.coarse_router.route(profile) {
+             if force_routing || decision.confidence > 0.9 {
+                 if let Some(route) = self.find_best_model_for_tier(decision.tier).await {
+                     return IntelligentRouteResult::Routed(route, decision);
+                 }
+             }
+        }
+
+        // 2. 尝试 Layer 2 上下文路由
+        if let Some(summary) = summary {
+            if let Some(decision) = self.contextual_router.route(profile, summary) {
+                if force_routing || decision.confidence > 0.75 {
+                    if let Some(route) = self.find_best_model_for_tier(decision.tier).await {
+                        return IntelligentRouteResult::Routed(route, decision);
+                    }
+                }
+            }
+        }
+
+        // 3. 如果强制路由但前两层都模糊，则触发 Layer 3
+        if force_routing {
+            let prompt = self.refined_router.build_prompt(raw_message, summary);
+            return IntelligentRouteResult::NeedsRefinement(self.refined_router.model.clone(), prompt);
+        }
+
+        // 4. 不满足路由触发条件，返回一个标记，让上层去查找原始请求的模型
+        IntelligentRouteResult::Static(RouteInfo {
+            model: "unknown".to_string(),
+            provider_url: "".to_string(),
+            provider: ProviderType::Unknown,
+            tier: ModelTier::Balanced,
+            capability: Default::default(),
+            input_price_per_1k: 0.0,
+            output_price_per_1k: 0.0,
+            is_virtual: true, // 标记为虚拟，表示不可执行
+            fallback_model: None,
+            fallback_provider_url: None,
+            fallback_provider: None,
+        })
+    }
+
+    /// 查询模型路由（静态）
     pub async fn route(&self, model: &str) -> RouteInfo {
         let routes = self.routes.read().await;
         routes.get(model).cloned().unwrap_or_else(|| RouteInfo {
             model:                model.to_string(),
             provider_url:         self.default_provider_url.clone(),
             provider:             ProviderType::Unknown,
+            tier:                 ModelTier::Balanced,
+            capability:           ModelCapability::default(),
+            input_price_per_1k:   0.0,
+            output_price_per_1k:  0.0,
+            is_virtual:           false,
             fallback_model:       None,
             fallback_provider_url: None,
             fallback_provider:    None,
         })
     }
 
-    /// 运行时设置 fallback（可由管理接口或定时任务动态更新）
-    #[allow(dead_code)]
+    /// 根据解析出的 Tier 选定路由
+    pub async fn route_by_tier(&self, tier: ModelTier) -> Option<RouteInfo> {
+        self.find_best_model_for_tier(tier).await
+    }
+
+    /// 解析 Layer 3 返回的文本
+    pub fn parse_refined_tier(&self, response: &str) -> ModelTier {
+        self.refined_router.parse_tier(response)
+    }
+
+    /// 构造摘要更新的 Prompt
+    pub fn build_summary_prompt(&self, messages_json: &str) -> String {
+        self.refined_router.build_summary_prompt(messages_json)
+    }
+
+    /// 解析摘要返回的 JSON
+    pub fn parse_summary_response(&self, response: &str, session_id: uuid::Uuid) -> Option<SessionSummary> {
+        let json_str = response.trim()
+            .strip_prefix("```json").unwrap_or(response)
+            .strip_suffix("```").unwrap_or(response)
+            .trim();
+            
+        if let Ok(mut summary) = serde_json::from_str::<SessionSummary>(json_str) {
+            summary.session_id = session_id;
+            return Some(summary);
+        }
+        None
+    }
+
+    /// 为指定档位寻找最佳模型（增加物理名称屏蔽，确保万无一失）
+    async fn find_best_model_for_tier(&self, tier: ModelTier) -> Option<RouteInfo> {
+        let routes = self.routes.read().await;
+        let virtual_names = ["auto", "eco", "balanced", "premium", "code", "reasoning", "longctx"];
+        
+        routes.values()
+            .filter(|r| {
+                !r.is_virtual && 
+                !virtual_names.contains(&r.model.to_lowercase().as_str()) && // 物理名称屏蔽
+                r.tier == tier &&
+                !r.provider_url.is_empty() // 必须有有效地址
+            })
+            .min_by(|a, b| {
+                a.input_price_per_1k.partial_cmp(&b.input_price_per_1k).unwrap_or(std::cmp::Ordering::Equal)
+            })
+            .cloned()
+    }
+
+    /// 运行时设置 fallback
     pub async fn set_fallback(
         &self,
         model:            &str,
@@ -127,15 +228,12 @@ impl ModelRouter {
         }
     }
 
-    /// 列出所有已注册的模型 ID（供启动时打印、GET /v1/models 等使用）
     pub async fn list_models(&self) -> Vec<String> {
         let mut models: Vec<String> = self.routes.read().await.keys().cloned().collect();
         models.sort();
         models
     }
 
-    /// 按 Provider 分组，返回 `(provider_name, [model_id, ...])` 列表，已排序。
-    /// 用于启动摘要显示各 Provider 提供的模型。
     pub async fn models_by_provider(&self) -> Vec<(String, Vec<String>)> {
         let routes = self.routes.read().await;
         let mut map: std::collections::BTreeMap<String, Vec<String>> = std::collections::BTreeMap::new();
