@@ -71,10 +71,10 @@ export function PopularModels() {
 
   /** 智能格式化价格：根据数值大小自适应小数位数 */
   function formatPrice(price: number): string {
-    if (price === 0) return '$0'
-    if (price >= 1) return `$${price.toFixed(2)}`
-    if (price >= 0.01) return `$${price.toFixed(4)}`
-    return `$${price.toFixed(6)}`
+    if (price === 0) return '¥0'
+    if (price >= 1) return `¥${price.toFixed(2)}`
+    if (price >= 0.01) return `¥${price.toFixed(4)}`
+    return `¥${price.toFixed(6)}`
   }
 
   function formatProvider(provider: string): string {

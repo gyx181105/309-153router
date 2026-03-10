@@ -208,7 +208,7 @@ export function DashboardSidebar() {
               ) : planInfo && planInfo.totalAmount > 0 ? (
                 <>
                   <p className="mt-1 text-xs text-sidebar-foreground font-medium">
-                    ${planInfo.usedAmount.toFixed(2)} / ${planInfo.totalAmount.toFixed(2)}
+                    ¥{planInfo.usedAmount.toFixed(2)} / ¥{planInfo.totalAmount.toFixed(2)}
                   </p>
                   <div className="mt-1.5 h-1 rounded-full bg-border">
                     <div
@@ -222,7 +222,7 @@ export function DashboardSidebar() {
               ) : (
                 <>
                   <p className="mt-1 text-xs text-sidebar-foreground font-medium">
-                    余额: ${planInfo?.balance.toFixed(2) || '0.00'}
+                    余额: ¥{planInfo?.balance.toFixed(2) || '0.00'}
                   </p>
                   <div className="mt-1.5 h-1 rounded-full bg-border">
                     <div className="h-full w-0 rounded-full bg-primary" />

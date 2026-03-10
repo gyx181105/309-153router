@@ -11,10 +11,10 @@ interface OverviewCardsProps {
 
 function formatCost(value: string): string {
   const n = Number(value)
-  if (n === 0) return "0"
-  if (n < 0.01) return n.toFixed(6)
-  if (n < 1) return n.toFixed(4)
-  return n.toFixed(2)
+  if (n === 0) return "¥0"
+  if (n < 0.01) return `¥${n.toFixed(6)}`
+  if (n < 1) return `¥${n.toFixed(4)}`
+  return `¥${n.toFixed(2)}`
 }
 
 export function OverviewCards({ data, loading }: OverviewCardsProps) {

@@ -117,9 +117,6 @@ export function ApiKeys() {
     return new Date(dateString).toLocaleDateString('zh-CN')
   }
 
-  const getQuotaPercent = (used: number, limit: number) => {
-    return Math.round((used / limit) * 100)
-  }
 
   return (
     <Card className="bg-card border-border">
@@ -174,23 +171,6 @@ export function ApiKeys() {
                   <div className="mt-1.5 flex items-center gap-3 text-[10px] text-muted-foreground">
                     <span>创建于 {formatDate(apiKey.created_at)}</span>
                     <span>过期: {formatDate(apiKey.expires_at)}</span>
-                  </div>
-                  <div className="mt-2 flex items-center gap-2">
-                    <div className="flex-1 h-1.5 bg-secondary rounded-full overflow-hidden">
-                      <div
-                        className={`h-full rounded-full ${
-                          getQuotaPercent(apiKey.quota_used, apiKey.quota_limit) > 90
-                            ? "bg-destructive"
-                            : "bg-primary"
-                        }`}
-                        style={{
-                          width: `${getQuotaPercent(apiKey.quota_used, apiKey.quota_limit)}%`,
-                        }}
-                      />
-                    </div>
-                    <span className="text-[10px] text-muted-foreground whitespace-nowrap">
-                      {apiKey.quota_used.toLocaleString()} / {apiKey.quota_limit.toLocaleString()}
-                    </span>
                   </div>
                 </div>
                 <div className="flex items-center gap-1 shrink-0">

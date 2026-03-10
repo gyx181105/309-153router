@@ -18,7 +18,8 @@ export async function POST(request: NextRequest) {
         newUserEmail: userEmail,
         inviteCodeStr: inviteCode,
       })
-    }
+    },
+    request.headers
   )
 
   if (!result.success) {

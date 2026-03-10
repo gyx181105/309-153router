@@ -43,7 +43,7 @@ function ChartTooltip({ active, payload, label }: {
             ? `请求: ${p.value.toLocaleString()}`
             : p.dataKey === "tokens"
             ? `Token: ${(p.value / 1000000).toFixed(2)}M`
-            : `费用: $${p.value.toFixed(2)}`}
+            : `费用: ¥${p.value.toFixed(2)}`}
         </p>
       ))}
     </div>
@@ -128,8 +128,8 @@ export function UsageChart() {
       return String(v)
     }
     // 费用：如果小于 0.01，显示更多小数位；否则显示 2 位小数
-    if (v < 0.01 && v > 0) return `$${v.toFixed(4)}`
-    return `$${v.toFixed(2)}`
+    if (v < 0.01 && v > 0) return `¥${v.toFixed(4)}`
+    return `¥${v.toFixed(2)}`
   }
 
   return (

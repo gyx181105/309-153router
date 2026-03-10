@@ -356,9 +356,16 @@ export async function getInviteStats(userId: string) {
     },
   })
 
-  const totalRewards = await prisma.inviteRewardRecord.count({
-    where: { userId },
+  // 奖励总数：从 transactions 表查询实际发放的邀请充值奖励金额
+  const rewardAgg = await prisma.transaction.aggregate({
+    where: {
+      userId,
+      type: 'adjustment',
+      description: '邀请奖励-被邀请人首充',
+    },
+    _sum: { amount: true },
   })
+  const totalRewards = rewardAgg._sum.amount ? Number(rewardAgg._sum.amount) : 0
 
   return {
     total_codes: totalCodes,

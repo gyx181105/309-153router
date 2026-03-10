@@ -168,8 +168,8 @@ export function ModelUsage() {
                     </div>
                     <span className="text-[11px] font-medium text-card-foreground tabular-nums shrink-0 ml-2">
                       {model.cost < 0.01 && model.cost > 0 
-                        ? `$${model.cost.toFixed(4)}` 
-                        : `$${model.cost.toFixed(2)}`}
+                        ? `¥${model.cost.toFixed(4)}` 
+                        : `¥${model.cost.toFixed(2)}`}
                     </span>
                   </div>
                 </div>

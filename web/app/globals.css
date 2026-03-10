@@ -341,3 +341,51 @@ button.ds-btn-primary:hover,
 .animate-marquee:hover {
   animation-play-state: paused;
 }
+
+/* ── Promo page ─────────────────────────────────────────────────── */
+.promo-hero-bg {
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -20%, color-mix(in srgb, var(--color-brand) 10%, transparent), transparent),
+    radial-gradient(ellipse 60% 40% at 80% 60%, color-mix(in srgb, var(--color-brand) 5%, transparent), transparent),
+    radial-gradient(ellipse 60% 40% at 20% 60%, color-mix(in srgb, var(--color-brand) 5%, transparent), transparent);
+  animation: promo-bg-drift 8s ease-in-out infinite alternate;
+}
+
+@keyframes promo-bg-drift {
+  0%   { opacity: 0.6; transform: scale(1) translateY(0); }
+  100% { opacity: 1;   transform: scale(1.05) translateY(-8px); }
+}
+
+/* Promo slider */
+.promo-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--color-border-default);
+  outline: none;
+}
+.promo-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--color-brand);
+  cursor: pointer;
+  border: 3px solid var(--color-bg-surface);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  transition: transform 0.15s ease;
+}
+.promo-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+.promo-slider::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--color-brand);
+  cursor: pointer;
+  border: 3px solid var(--color-bg-surface);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
