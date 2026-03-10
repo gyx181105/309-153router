@@ -23,7 +23,6 @@ import {
   getInviteRechargeRewardAmount,
 } from './invite.repo'
 import { prisma } from '@/lib/db'
-import { Prisma } from '@prisma/client'
 import type { HandleInviteCodeParams, HandleInviteCodeResult } from './invite.types'
 import type { InviteCode, InvitedUser, InviteStats, DailyStat, RewardRule, MyReward } from './invite.types'
 
@@ -388,27 +387,27 @@ export async function handleInviteCodeOnRegister(
     await updateInviteCodeUsedCount(inviteCode.id, actualUsedCount)
     console.log('[邀请码处理] 更新邀请码使用次数:', { code, usedCount: actualUsedCount })
 
-    // 3. 发放单次邀请奖励
+    // 3. 创建单次邀请奖励记录（仅记录，实际余额奖励在被邀请人首充时由 grantInviteRechargeReward 发放）
     try {
       const perInviteRule = await upsertPerInviteRewardRule(now)
 
-      await createRewardRecord({
-        userId: inviterId,
-        ruleId: perInviteRule.id,
-        inviteCount: actualUsedCount,
-        rewardType: 'points',
-        rewardValue: perInviteRule.rewardValue,
-        rewardName: perInviteRule.rewardName,
-        status: 'granted',
-        grantedAt: now,
-        expiresAt: null,
-        createdAt: now,
-      })
-
-      // TODO: 发放积分（需要集成到实际的积分系统）
-      console.log(`发放积分: 用户 ${inviterId} 获得 ${perInviteRule.rewardValue} 积分 (邀请用户 ${params.newUserEmail})`)
+      if (perInviteRule.isActive && perInviteRule.rewardValue > 0) {
+        await createRewardRecord({
+          userId: inviterId,
+          ruleId: perInviteRule.id,
+          inviteCount: actualUsedCount,
+          rewardType: perInviteRule.rewardType,
+          rewardValue: perInviteRule.rewardValue,
+          rewardName: perInviteRule.rewardName,
+          status: 'pending',
+          grantedAt: null,
+          expiresAt: null,
+          createdAt: now,
+        })
+        console.log(`[邀请码处理] 创建奖励记录: 用户 ${inviterId} (邀请用户 ${params.newUserEmail})，待被邀请人首充后发放`)
+      }
     } catch (err) {
-      console.warn('发放单次邀请奖励失败:', err)
+      console.warn('创建邀请奖励记录失败:', err)
     }
 
     // 4. 检查并发放累计邀请奖励

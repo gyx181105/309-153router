@@ -3,8 +3,10 @@
 import { useState, useEffect } from "react"
 import { DashboardLayout } from "@/app/(dashboard)/components/dashboard-layout"
 import { AuthGuard } from "@/app/(auth)/components/auth-guard"
+import { SuperadminGuard } from "@/app/(superadmin)/components/superadmin-guard"
 import { SuperadminNav } from "@/app/(superadmin)/components/superadmin-nav"
 import { ProviderList } from "@/app/(superadmin)/components/provider-list"
+import { getAuthHeaders } from "@/lib/auth-client"
 import type { ProviderItem } from "@/app/(superadmin)/domain/superadmin.types"
 import type { ModelPricingItem } from "@/app/(superadmin)/domain/superadmin.types"
 
@@ -14,9 +16,10 @@ export default function SuperadminProvidersPage() {
   const [loading, setLoading] = useState(true)
 
   const fetchData = () => {
+    const headers = getAuthHeaders()
     Promise.all([
-      fetch("/api/superadmin/providers").then((r) => r.json()),
-      fetch("/api/superadmin/models").then((r) => r.json()),
+      fetch("/api/superadmin/providers", { headers }).then((r) => r.json()),
+      fetch("/api/superadmin/models", { headers }).then((r) => r.json()),
     ])
       .then(([provRes, modelsRes]) => {
         if (provRes.success && provRes.data) setProviders(provRes.data)
@@ -33,7 +36,8 @@ export default function SuperadminProvidersPage() {
 
   return (
     <AuthGuard>
-      <DashboardLayout>
+      <SuperadminGuard>
+        <DashboardLayout>
         <div className="p-6 space-y-6">
           <SuperadminNav />
           <div>
@@ -50,7 +54,7 @@ export default function SuperadminProvidersPage() {
             onModelUpdate={(modelName, patch) =>
               fetch(`/api/superadmin/pricing/${encodeURIComponent(modelName)}`, {
                 method: "PATCH",
-                headers: { "Content-Type": "application/json" },
+                headers: { "Content-Type": "application/json", ...getAuthHeaders() },
                 body: JSON.stringify(patch),
               }).then((res) => {
                 if (!res.ok) return res.json().then((j: { detail?: string }) => { throw new Error(j.detail || "更新失败") })
@@ -60,6 +64,7 @@ export default function SuperadminProvidersPage() {
           />
         </div>
       </DashboardLayout>
+      </SuperadminGuard>
     </AuthGuard>
   )
 }

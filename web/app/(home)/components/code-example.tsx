@@ -68,7 +68,7 @@ export function CodeExample() {
 
   return (
     <section 
-      id="docs" 
+      id="integration" 
       className="border-t py-24"
       style={{
         borderColor: 'var(--color-border-default)',

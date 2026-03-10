@@ -15,7 +15,6 @@ export default function RegisterPage() {
   const searchParams = useSearchParams()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
   const [inviteCode, setInviteCode] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -49,11 +48,6 @@ export default function RegisterPage() {
     setError('')
 
     // 验证密码
-    if (password !== confirmPassword) {
-      setError('两次输入的密码不一致')
-      return
-    }
-
     if (password.length < 6) {
       setError('密码长度至少为6位')
       return
@@ -96,7 +90,7 @@ export default function RegisterPage() {
           return
         }
         // 保存用户信息到 localStorage
-        saveUserAuth(userId, data.email, data.token)
+        saveUserAuth(userId, data.email, data.token, data.role)
         // 重定向到仪表盘
         router.push('/dashboard')
         router.refresh()
@@ -144,18 +138,6 @@ export default function RegisterPage() {
                 placeholder="至少6位"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                required
-                disabled={loading}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="confirmPassword">确认密码</Label>
-              <Input
-                id="confirmPassword"
-                type="password"
-                placeholder="再次输入密码"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
                 required
                 disabled={loading}
               />

@@ -17,6 +17,7 @@ import type {
   AuthError,
   LoginLogData,
 } from './auth.types'
+import { notifyUserRegister, notifyUserLogin } from '@/lib/dingtalk'
 
 /**
  * 提取 IP 地址（从 Request Headers）
@@ -111,12 +112,18 @@ export async function loginUser(
     // 生成 Token
     const token = createSimpleToken(user.id, trimmedEmail)
 
+    // 发送钉钉登录通知（异步，不阻塞登录流程）
+    notifyUserLogin(trimmedEmail, user.email, userAgent, ipAddress).catch((err) => {
+      console.error('发送钉钉登录通知失败:', err)
+    })
+
     return {
       success: true,
       message: '登录成功',
       token,
       userId: user.id,
       email: trimmedEmail,
+      role: user.role,
     }
   } catch (error: any) {
     console.error('登录失败:', error)
@@ -132,7 +139,8 @@ export async function loginUser(
  */
 export async function registerUser(
   params: RegisterParams,
-  onInviteCodeProcess?: (userId: string, email: string, inviteCode: string) => Promise<void>
+  onInviteCodeProcess?: (userId: string, email: string, inviteCode: string) => Promise<void>,
+  headers?: { get: (key: string) => string | null }
 ): Promise<RegisterResult | AuthError> {
   try {
     // 验证邮箱格式
@@ -182,12 +190,20 @@ export async function registerUser(
     // 生成 Token
     const token = createSimpleToken(user.id, trimmedEmail)
 
+    // 发送钉钉注册通知（异步，不阻塞注册流程）
+    const regIp = headers ? extractIpAddress(headers) : null
+    const regUa = headers?.get('user-agent') || null
+    notifyUserRegister(trimmedEmail, null, params.inviteCode || null, regUa, regIp).catch((err) => {
+      console.error('发送钉钉注册通知失败:', err)
+    })
+
     return {
       success: true,
       message: '注册成功',
       userId: user.id,
       token,
       email: trimmedEmail,
+      role: user.role,
     }
   } catch (error: any) {
     console.error('注册失败:', error)

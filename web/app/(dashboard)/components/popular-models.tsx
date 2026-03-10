@@ -1,67 +1,134 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { ArrowUpRight } from "lucide-react"
 
-const models = [
-  {
-    name: "GPT-4o",
-    provider: "OpenAI",
-    inputPrice: "$2.50",
-    outputPrice: "$10.00",
-    context: "128K",
-    latency: "~180ms",
-    status: "online" as const,
-  },
-  {
-    name: "Claude 3.5 Sonnet",
-    provider: "Anthropic",
-    inputPrice: "$3.00",
-    outputPrice: "$15.00",
-    context: "200K",
-    latency: "~220ms",
-    status: "online" as const,
-  },
-  {
-    name: "Gemini 2.0 Flash",
-    provider: "Google",
-    inputPrice: "$0.10",
-    outputPrice: "$0.40",
-    context: "1M",
-    latency: "~90ms",
-    status: "online" as const,
-  },
-  {
-    name: "DeepSeek V3",
-    provider: "DeepSeek",
-    inputPrice: "$0.27",
-    outputPrice: "$1.10",
-    context: "64K",
-    latency: "~240ms",
-    status: "online" as const,
-  },
-  {
-    name: "Llama 3.3 70B",
-    provider: "Meta",
-    inputPrice: "$0.60",
-    outputPrice: "$0.80",
-    context: "128K",
-    latency: "~160ms",
-    status: "degraded" as const,
-  },
-  {
-    name: "Mistral Large",
-    provider: "Mistral",
-    inputPrice: "$2.00",
-    outputPrice: "$6.00",
-    context: "128K",
-    latency: "~200ms",
-    status: "online" as const,
-  },
-]
+interface Model {
+  name: string
+  provider: string
+  inputPrice: string
+  outputPrice: string
+  context: string
+  latency: string
+  status: "online" | "degraded"
+}
 
 export function PopularModels() {
+  const [models, setModels] = useState<Model[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function fetchModels() {
+      try {
+        // 直接从数据库 API 获取模型列表（含定价信息）
+        const response = await fetch('/api/models')
+        if (!response.ok) {
+          console.error('Failed to fetch models: API returned', response.status)
+          setModels([])
+          setLoading(false)
+          return
+        }
+
+        const apiData = await response.json()
+
+        if (!apiData.models || !Array.isArray(apiData.models)) {
+          console.error('Failed to fetch models: Invalid response format', apiData)
+          setModels([])
+          setLoading(false)
+          return
+        }
+
+        // API 返回格式: { models: [{ name, provider, inputPrice, outputPrice, maxTokens, ... }] }
+        const modelList = apiData.models.slice(0, 6).map((m: {
+          name: string
+          provider: string
+          inputPrice: number
+          outputPrice: number
+          maxTokens: number | null
+        }) => ({
+          name: m.name,
+          provider: formatProvider(m.provider),
+          inputPrice: formatPrice(m.inputPrice),
+          outputPrice: formatPrice(m.outputPrice),
+          context: m.maxTokens ? formatTokens(m.maxTokens) : "—",
+          latency: "—",
+          status: "online" as const,
+        }))
+
+        setModels(modelList)
+      } catch (error) {
+        console.error('Failed to fetch models:', error)
+        setModels([])
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchModels()
+  }, [])
+
+  /** 智能格式化价格：根据数值大小自适应小数位数 */
+  function formatPrice(price: number): string {
+    if (price === 0) return '¥0'
+    if (price >= 1) return `¥${price.toFixed(2)}`
+    if (price >= 0.01) return `¥${price.toFixed(4)}`
+    return `¥${price.toFixed(6)}`
+  }
+
+  function formatProvider(provider: string): string {
+    const p = provider.toLowerCase()
+    if (p.includes('openai')) return 'OpenAI'
+    if (p.includes('anthropic')) return 'Anthropic'
+    if (p.includes('google')) return 'Google'
+    if (p.includes('deepseek')) return 'DeepSeek'
+    if (p.includes('meta') || p.includes('llama')) return 'Meta'
+    if (p.includes('mistral')) return 'Mistral'
+    if (p.includes('qwen') || p.includes('alibaba')) return 'Alibaba'
+    return provider.charAt(0).toUpperCase() + provider.slice(1)
+  }
+
+  function formatTokens(tokens: number): string {
+    if (tokens >= 1000000) return `${(tokens / 1000000).toFixed(0)}M`
+    if (tokens >= 1000) return `${(tokens / 1000).toFixed(0)}K`
+    return `${tokens}`
+  }
+
+  if (loading) {
+    return (
+      <Card className="bg-card border-border">
+        <CardHeader className="flex flex-row items-center justify-between pb-3">
+          <CardTitle className="text-sm font-medium text-card-foreground">
+            可用模型
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="p-0">
+          <div className="h-[300px] flex items-center justify-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+          </div>
+        </CardContent>
+      </Card>
+    )
+  }
+
+  if (models.length === 0) {
+    return (
+      <Card className="bg-card border-border">
+        <CardHeader className="flex flex-row items-center justify-between pb-3">
+          <CardTitle className="text-sm font-medium text-card-foreground">
+            可用模型
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="p-0">
+          <div className="py-8 text-center text-sm text-muted-foreground">
+            暂无可用模型
+          </div>
+        </CardContent>
+      </Card>
+    )
+  }
+
   return (
     <Card className="bg-card border-border">
       <CardHeader className="flex flex-row items-center justify-between pb-3">
@@ -118,13 +185,13 @@ export function PopularModels() {
                     <span className="text-xs tabular-nums text-card-foreground">
                       {model.inputPrice}
                     </span>
-                    <p className="text-[9px] text-muted-foreground">/ 1M tokens</p>
+                    <p className="text-[9px] text-muted-foreground">/ 1K tokens</p>
                   </td>
                   <td className="px-4 py-3">
                     <span className="text-xs tabular-nums text-card-foreground">
                       {model.outputPrice}
                     </span>
-                    <p className="text-[9px] text-muted-foreground">/ 1M tokens</p>
+                    <p className="text-[9px] text-muted-foreground">/ 1K tokens</p>
                   </td>
                   <td className="px-4 py-3">
                     <span className="text-xs tabular-nums text-card-foreground">

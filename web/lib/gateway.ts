@@ -1,4 +1,4 @@
-const GATEWAY_URL = process.env.GATEWAY_URL || 'http://localhost:9113'
+const GATEWAY_URL = process.env.GATEWAY_URL || 'http://localhost:3001'
 const REQUEST_TIMEOUT = 60000
 
 export interface ChatMessage {
@@ -75,7 +75,17 @@ export async function getModelList(): Promise<{ models: string[] } | { error: { 
       return { error: { message: 'Failed to fetch models' } }
     }
 
-    return await response.json()
+    const data = await response.json()
+    
+    // 网关返回格式: { object: "list", data: [{ id: "...", ... }] }
+    // 转换为: { models: ["model1", "model2", ...] }
+    if (data && Array.isArray(data.data)) {
+      return {
+        models: data.data.map((item: { id: string }) => item.id),
+      }
+    }
+    
+    return { error: { message: 'Invalid response format from gateway' } }
   } catch (error) {
     return {
       error: {
@@ -103,7 +113,20 @@ export async function getModelPricing(modelName: string): Promise<{
       return { error: { message: 'Failed to fetch pricing' } }
     }
 
-    return await response.json()
+    const data = await response.json()
+    
+    // 网关返回格式: { modelName: "...", inputCostPer1k: 0.0025, outputCostPer1k: 0.01, provider: "..." }
+    // 转换为: { modelName: "...", inputCost: 0.0025, outputCost: 0.01, provider: "..." }
+    if (data && typeof data.inputCostPer1k === 'number' && typeof data.outputCostPer1k === 'number') {
+      return {
+        modelName: data.modelName || modelName,
+        inputCost: data.inputCostPer1k,
+        outputCost: data.outputCostPer1k,
+        provider: data.provider || 'unknown',
+      }
+    }
+    
+    return { error: { message: 'Invalid response format from gateway' } }
   } catch (error) {
     return {
       error: {

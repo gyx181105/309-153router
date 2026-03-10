@@ -3,8 +3,10 @@
 import { useState, useEffect } from "react"
 import { DashboardLayout } from "@/app/(dashboard)/components/dashboard-layout"
 import { AuthGuard } from "@/app/(auth)/components/auth-guard"
+import { SuperadminGuard } from "@/app/(superadmin)/components/superadmin-guard"
 import { SuperadminNav } from "@/app/(superadmin)/components/superadmin-nav"
 import { PricingTable } from "@/app/(superadmin)/components/pricing-table"
+import { getAuthHeaders } from "@/lib/auth-client"
 import type { ModelPricingItem } from "@/app/(superadmin)/domain/superadmin.types"
 
 export default function SuperadminPricingPage() {
@@ -12,7 +14,7 @@ export default function SuperadminPricingPage() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetch("/api/superadmin/models")
+    fetch("/api/superadmin/models", { headers: getAuthHeaders() })
       .then((res) => res.json())
       .then((json) => {
         if (json.success && json.data?.pricing) setPricing(json.data.pricing)
@@ -24,7 +26,7 @@ export default function SuperadminPricingPage() {
   const handleUpdate = (modelName: string, patch: { inputPrice?: number; outputPrice?: number; enabled?: boolean }) => {
     return fetch(`/api/superadmin/pricing/${encodeURIComponent(modelName)}`, {
       method: "PATCH",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", ...getAuthHeaders() },
       body: JSON.stringify(patch),
     }).then((res) => {
       if (!res.ok) return res.json().then((j) => { throw new Error(j.detail || "更新失败") })
@@ -46,7 +48,7 @@ export default function SuperadminPricingPage() {
   const handleRename = (oldModelName: string, newModelName: string) => {
     return fetch(`/api/superadmin/pricing/${encodeURIComponent(oldModelName)}`, {
       method: "PATCH",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", ...getAuthHeaders() },
       body: JSON.stringify({ newModelName }),
     }).then((res) => {
       if (!res.ok) return res.json().then((j) => { throw new Error(j.detail || "重命名失败") })
@@ -60,7 +62,8 @@ export default function SuperadminPricingPage() {
 
   return (
     <AuthGuard>
-      <DashboardLayout>
+      <SuperadminGuard>
+        <DashboardLayout>
         <div className="p-6">
           <SuperadminNav />
           <div className="mb-6">
@@ -77,6 +80,7 @@ export default function SuperadminPricingPage() {
           />
         </div>
       </DashboardLayout>
+      </SuperadminGuard>
     </AuthGuard>
   )
 }

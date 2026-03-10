@@ -41,7 +41,7 @@ export default function LoginPage() {
           return
         }
         // 保存用户信息到 localStorage
-        saveUserAuth(userId, data.email, data.token)
+        saveUserAuth(userId, data.email, data.token, data.role)
         // 重定向到仪表盘
         router.push('/dashboard')
         router.refresh()

@@ -6,11 +6,24 @@
  */
 import { NextRequest, NextResponse } from 'next/server'
 import { updateModelPricing, renameModelPricing } from '@/app/(superadmin)/domain/superadmin.service'
+import { verifySuperadmin } from '@/lib/auth-server'
 
 export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ modelName: string }> }
 ) {
+  // 验证超级管理员权限
+  const auth = await verifySuperadmin(request)
+  if (!auth) {
+    return NextResponse.json(
+      {
+        success: false,
+        detail: '权限不足，仅超级管理员可访问',
+      },
+      { status: 403 }
+    )
+  }
+
   try {
     const { modelName: currentName } = await params
     if (!currentName) {

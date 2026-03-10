@@ -19,6 +19,7 @@ export interface LoginResult {
   email: string
   token: string
   message: string
+  role: string
 }
 
 export interface RegisterResult {
@@ -27,6 +28,7 @@ export interface RegisterResult {
   email: string
   token: string
   message: string
+  role: string
 }
 
 export interface AuthError {

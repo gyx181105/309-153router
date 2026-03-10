@@ -3,14 +3,14 @@
 import { useState } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Menu, X } from "lucide-react"
+import { Menu, X, Gift } from "lucide-react"
 import { ThemeToggle } from "./theme-toggle"
 
 const navLinks = [
-  { href: "#models", label: "模型" },
   { href: "#features", label: "功能" },
-  { href: "#pricing", label: "定价" },
-  { href: "#docs", label: "文档" },
+  { href: "#integration", label: "集成" },
+  { href: "#testimonials", label: "用户反馈" },
+  { href: "#faq", label: "FAQ" },
 ]
 
 export function Navbar() {
@@ -72,6 +72,15 @@ export function Navbar() {
 
         {/* Desktop Actions */}
         <div className="hidden items-center gap-3 md:flex">
+          <Link href="/promo">
+            <Button 
+              size="sm"
+              className="ds-btn-primary px-4 py-2 text-xs"
+            >
+              <Gift className="mr-1.5 h-3.5 w-3.5" />
+              邀请有礼
+            </Button>
+          </Link>
           <Link href="/login">
             <Button 
               variant="ghost" 
@@ -143,6 +152,14 @@ export function Navbar() {
               </Link>
             ))}
             <div className="mt-4 flex flex-col gap-3">
+              <Link href="/promo" className="w-full">
+                <Button 
+                  className="w-full ds-btn-primary"
+                >
+                  <Gift className="mr-1.5 h-4 w-4" />
+                  邀请有礼
+                </Button>
+              </Link>
               <Link href="/login" className="w-full">
                 <Button 
                   variant="outline" 

@@ -24,11 +24,13 @@ interface ModelData {
 const defaultModels: ModelData[] = []
 
 const providerColors: Record<string, string> = {
-  OpenAI: "oklch(0.65 0.2 250)",
-  Anthropic: "oklch(0.72 0.18 165)",
-  Google: "oklch(0.75 0.15 80)",
-  DeepSeek: "oklch(0.65 0.22 330)",
-  Meta: "oklch(0.7 0.2 30)",
+  OpenAI: "#003153",
+  Anthropic: "#1a5276",
+  Google: "#2e86c1",
+  DeepSeek: "#5dade2",
+  Meta: "#85c1e9",
+  Ollama: "#aed6f1",
+  Other: "#d4e6f1",
 }
 
 function PieTooltip({ active, payload }: {
@@ -76,7 +78,7 @@ export function ModelUsage() {
               requests: d.requests,
               percentage: totalTokens > 0 ? Math.round((d.tokens / totalTokens) * 100) : 0,
               cost: d.cost,
-              color: Object.keys(providerColors)[index % Object.keys(providerColors).length] || "oklch(0.65 0.2 250)",
+              color: Object.values(providerColors)[index % Object.values(providerColors).length] || "#003153",
             }
           }).sort((a, b) => b.percentage - a.percentage)
 
@@ -166,8 +168,8 @@ export function ModelUsage() {
                     </div>
                     <span className="text-[11px] font-medium text-card-foreground tabular-nums shrink-0 ml-2">
                       {model.cost < 0.01 && model.cost > 0 
-                        ? `$${model.cost.toFixed(4)}` 
-                        : `$${model.cost.toFixed(2)}`}
+                        ? `¥${model.cost.toFixed(4)}` 
+                        : `¥${model.cost.toFixed(2)}`}
                     </span>
                   </div>
                 </div>

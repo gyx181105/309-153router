@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
 import { RefreshCw } from "lucide-react"
+import { getAuthHeaders } from "@/lib/auth-client"
 import type { ModelUsageStats, ModelDailyStats } from "@/app/(superadmin)/domain/superadmin.types"
 
 interface ModelStatsChartProps {
@@ -27,7 +28,7 @@ export function ModelStatsChart({ days: initialDays = 7 }: ModelStatsChartProps)
 
   const fetchStats = async () => {
     try {
-      const res = await fetch(`/api/superadmin/models/stats?days=${days}`)
+      const res = await fetch(`/api/superadmin/models/stats?days=${days}`, { headers: getAuthHeaders() })
       const json = await res.json()
       if (json.success && json.data) {
         setByModel(json.data.byModel ?? [])

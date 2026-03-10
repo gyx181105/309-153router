@@ -441,6 +441,7 @@ pub(crate) async fn handle_stream(
         .status(StatusCode::OK)
         .header("Content-Type", "text/event-stream")
         .header("Cache-Control", "no-cache")
+        .header("Connection", "keep-alive")
         .header("X-Accel-Buffering", "no")
         .body(body_stream)
         .unwrap())

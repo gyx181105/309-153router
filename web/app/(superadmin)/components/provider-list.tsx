@@ -24,6 +24,7 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { Switch } from "@/components/ui/switch"
 import { Plus, Loader2 } from "lucide-react"
+import { getAuthHeaders } from "@/lib/auth-client"
 import type { ProviderItem } from "@/app/(superadmin)/domain/superadmin.types"
 import type { ModelPricingItem } from "@/app/(superadmin)/domain/superadmin.types"
 
@@ -100,7 +101,7 @@ export function ProviderList({ providers, pricing, loading, onAdded, onModelUpda
     try {
       const res = await fetch("/api/superadmin/providers", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...getAuthHeaders() },
         body: JSON.stringify({
           code: code.trim(),
           name: name.trim() || undefined,

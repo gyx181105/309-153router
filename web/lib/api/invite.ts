@@ -126,10 +126,14 @@ export async function getMyInvites(): Promise<InvitedUser[]> {
  * 获取邀请统计
  */
 export async function getInviteStats(): Promise<{
-  total_codes: number
-  total_invites: number
-  today_invites: number
-  last_7_days_invites: number
+  success: boolean
+  stats: {
+    total_codes: number
+    total_invites: number
+    today_invites: number
+    last_7_days_invites: number
+    total_rewards: number
+  }
 }> {
   const response = await fetch(`${API_BASE}/stats`, {
     method: 'GET',
@@ -140,7 +144,7 @@ export async function getInviteStats(): Promise<{
   if (!data.success) {
     throw new Error(data.detail || '获取邀请统计失败')
   }
-  return data.stats
+  return data
 }
 
 /**

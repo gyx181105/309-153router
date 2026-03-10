@@ -61,8 +61,8 @@ export function StatCards() {
             {
               label: '消费金额',
               value: data.summary.total_cost < 0.01 && data.summary.total_cost > 0
-                ? `$${data.summary.total_cost.toFixed(4)}`
-                : `$${data.summary.total_cost.toFixed(2)}`,
+                ? `¥${data.summary.total_cost.toFixed(4)}`
+                : `¥${data.summary.total_cost.toFixed(2)}`,
               change: '—',
               trend: 'up',
               icon: DollarSign,
@@ -174,7 +174,7 @@ function getDefaultStats(): Stats[] {
     },
     {
       label: '消费金额',
-      value: '$0.00',
+      value: '¥0.00',
       change: '0%',
       trend: 'up',
       icon: DollarSign,
