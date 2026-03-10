@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { DashboardLayout } from "@/app/(dashboard)/components/dashboard-layout"
 import { AuthGuard } from "@/app/(auth)/components/auth-guard"
+import { SuperadminGuard } from "@/app/(superadmin)/components/superadmin-guard"
 import { SuperadminNav } from "@/app/(superadmin)/components/superadmin-nav"
 import {
   Table,
@@ -17,6 +18,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Switch } from "@/components/ui/switch"
 import { Loader2 } from "lucide-react"
+import { getAuthHeaders } from "@/lib/auth-client"
 
 type RewardRule = {
   id: number
@@ -39,7 +41,7 @@ export default function SuperadminInviteRewardsPage() {
   const [loading, setLoading] = useState(true)
 
   const fetchRules = () => {
-    fetch("/api/superadmin/invite-rewards")
+    fetch("/api/superadmin/invite-rewards", { headers: getAuthHeaders() })
       .then((res) => res.json())
       .then((json) => {
         if (json.success && json.data?.rules) {
@@ -63,19 +65,22 @@ export default function SuperadminInviteRewardsPage() {
   if (loading) {
     return (
       <AuthGuard>
-        <DashboardLayout>
+        <SuperadminGuard>
+          <DashboardLayout>
           <div className="p-6">
             <SuperadminNav />
             <p className="text-muted-foreground">加载中…</p>
           </div>
         </DashboardLayout>
+        </SuperadminGuard>
       </AuthGuard>
     )
   }
 
   return (
     <AuthGuard>
-      <DashboardLayout>
+      <SuperadminGuard>
+        <DashboardLayout>
         <div className="p-6 space-y-6">
           <SuperadminNav />
           <div>
@@ -131,6 +136,7 @@ export default function SuperadminInviteRewardsPage() {
           </Card>
         </div>
       </DashboardLayout>
+      </SuperadminGuard>
     </AuthGuard>
   )
 }
@@ -165,7 +171,7 @@ function RewardRuleRow({
     setMsg(null)
     fetch("/api/superadmin/invite-rewards", {
       method: "PATCH",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", ...getAuthHeaders() },
       body: JSON.stringify({
         id: rule.id,
         rewardValue: value,

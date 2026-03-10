@@ -7,10 +7,10 @@ import { Menu, X } from "lucide-react"
 import { ThemeToggle } from "./theme-toggle"
 
 const navLinks = [
-  { href: "#models", label: "模型" },
   { href: "#features", label: "功能" },
-  { href: "#pricing", label: "定价" },
-  { href: "#docs", label: "文档" },
+  { href: "#integration", label: "集成" },
+  { href: "#testimonials", label: "用户反馈" },
+  { href: "#faq", label: "FAQ" },
 ]
 
 export function Navbar() {

@@ -41,7 +41,9 @@ export function ApiKeys() {
         headers: { 'x-user-id': userId },
       })
       const data = await response.json()
-      setKeys(data.data || [])
+      // 只显示活跃的 key，已撤销的不显示
+      const activeKeys = (data.data || []).filter((k: ApiKey) => k.status === 'active')
+      setKeys(activeKeys)
     } catch (error) {
       console.error('Failed to load keys:', error)
     } finally {

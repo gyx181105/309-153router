@@ -253,22 +253,20 @@ export async function getRewardRules(activeOnly: boolean = true) {
  * 获取或创建单次邀请奖励规则
  */
 export async function upsertPerInviteRewardRule(now: string) {
-  return prisma.inviteRewardRule.upsert({
+  // 先查询是否已存在规则，如果已存在则直接返回（不覆盖管理员手动设置的值）
+  const existing = await prisma.inviteRewardRule.findUnique({
     where: { inviteCount: -1 },
-    update: {
-      rewardType: 'points',
-      rewardValue: 100,
-      rewardName: '邀请成功奖励100积分',
-      rewardDescription: '每成功邀请一位好友注册，立即获得 100 积分',
-      isActive: true,
-      updatedAt: now,
-    },
-    create: {
+  })
+  if (existing) return existing
+
+  // 不存在时创建默认规则：每次邀请奖励 20 元余额
+  return prisma.inviteRewardRule.create({
+    data: {
       inviteCount: -1,
-      rewardType: 'points',
-      rewardValue: 100,
-      rewardName: '邀请成功奖励100积分',
-      rewardDescription: '每成功邀请一位好友注册，立即获得 100 积分',
+      rewardType: 'balance',
+      rewardValue: 20,
+      rewardName: '邀请注册奖励',
+      rewardDescription: '每成功邀请一位好友注册，邀请人立即获得 20 元余额',
       isActive: true,
       createdAt: now,
       updatedAt: now,
@@ -358,11 +356,16 @@ export async function getInviteStats(userId: string) {
     },
   })
 
+  const totalRewards = await prisma.inviteRewardRecord.count({
+    where: { userId },
+  })
+
   return {
     total_codes: totalCodes,
     total_invites: totalInvites,
     today_invites: todayInvites,
     last_7_days_invites: last7DaysInvites,
+    total_rewards: totalRewards,
   }
 }
 

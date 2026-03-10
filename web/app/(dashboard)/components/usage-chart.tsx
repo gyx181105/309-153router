@@ -161,33 +161,33 @@ export function UsageChart() {
               <AreaChart data={data} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
                 <defs>
                   <linearGradient id="fillPrimary" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="oklch(0.65 0.2 250)" stopOpacity={0.3} />
-                    <stop offset="100%" stopColor="oklch(0.65 0.2 250)" stopOpacity={0.02} />
+                    <stop offset="0%" stopColor="#003153" stopOpacity={0.3} />
+                    <stop offset="100%" stopColor="#003153" stopOpacity={0.02} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid
                   strokeDasharray="3 3"
-                  stroke="oklch(0.26 0.008 260)"
+                  stroke="#e6e6e6"
                   vertical={false}
                 />
                 <XAxis
                   dataKey="date"
                   axisLine={false}
                   tickLine={false}
-                  tick={{ fontSize: 11, fill: "oklch(0.6 0.01 260)" }}
+                  tick={{ fontSize: 11, fill: "#9a9a9a" }}
                   interval="preserveStartEnd"
                 />
                 <YAxis
                   axisLine={false}
                   tickLine={false}
-                  tick={{ fontSize: 11, fill: "oklch(0.6 0.01 260)" }}
+                  tick={{ fontSize: 11, fill: "#9a9a9a" }}
                   tickFormatter={formatY}
                 />
                 <RechartsTooltip content={<ChartTooltip />} />
                 <Area
                   type="monotone"
                   dataKey={metric}
-                  stroke="oklch(0.65 0.2 250)"
+                  stroke="#003153"
                   strokeWidth={2}
                   fill="url(#fillPrimary)"
                 />

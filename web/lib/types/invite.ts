@@ -29,6 +29,7 @@ export interface InviteStats {
   total_invites: number
   today_invites: number
   last_7_days_invites: number
+  total_rewards: number
 }
 
 export interface DailyStat {

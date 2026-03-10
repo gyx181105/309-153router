@@ -3,11 +3,13 @@
 import { useState, useEffect } from "react"
 import { DashboardLayout } from "@/app/(dashboard)/components/dashboard-layout"
 import { AuthGuard } from "@/app/(auth)/components/auth-guard"
+import { SuperadminGuard } from "@/app/(superadmin)/components/superadmin-guard"
 import { SuperadminNav } from "@/app/(superadmin)/components/superadmin-nav"
 import { OverviewCards } from "@/app/(superadmin)/components/overview-cards"
 import { ModelTable } from "@/app/(superadmin)/components/model-table"
 import { ModelBarCharts } from "@/app/(superadmin)/components/model-bar-charts"
 import { ModelDailyTrendCharts } from "@/app/(superadmin)/components/model-daily-trend-charts"
+import { getAuthHeaders } from "@/lib/auth-client"
 import type { SuperadminOverview, ModelsListResponse } from "@/app/(superadmin)/domain/superadmin.types"
 import type { ModelDailyStats } from "@/app/(superadmin)/domain/superadmin.types"
 
@@ -20,7 +22,7 @@ export default function SuperadminDashboardPage() {
   const [loadingDaily, setLoadingDaily] = useState(true)
 
   useEffect(() => {
-    fetch("/api/superadmin/overview")
+    fetch("/api/superadmin/overview", { headers: getAuthHeaders() })
       .then((res) => res.json())
       .then((json) => {
         if (json.success && json.data) setOverview(json.data)
@@ -30,7 +32,7 @@ export default function SuperadminDashboardPage() {
   }, [])
 
   useEffect(() => {
-    fetch("/api/superadmin/models")
+    fetch("/api/superadmin/models", { headers: getAuthHeaders() })
       .then((res) => res.json())
       .then((json) => {
         if (json.success && json.data) setModelsData(json.data)
@@ -40,7 +42,7 @@ export default function SuperadminDashboardPage() {
   }, [])
 
   useEffect(() => {
-    fetch("/api/superadmin/models/stats?days=30")
+    fetch("/api/superadmin/models/stats?days=30", { headers: getAuthHeaders() })
       .then((res) => res.json())
       .then((json) => {
         if (json.success && json.data?.daily) setDailyStats(json.data.daily)
@@ -51,7 +53,8 @@ export default function SuperadminDashboardPage() {
 
   return (
     <AuthGuard>
-      <DashboardLayout>
+      <SuperadminGuard>
+        <DashboardLayout>
         <div className="p-6 space-y-6">
           <SuperadminNav />
           <div>
@@ -74,6 +77,7 @@ export default function SuperadminDashboardPage() {
           />
         </div>
       </DashboardLayout>
+      </SuperadminGuard>
     </AuthGuard>
   )
 }

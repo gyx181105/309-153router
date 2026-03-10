@@ -31,5 +31,6 @@ export async function POST(request: NextRequest) {
     token: result.token,
     user_id: result.userId,
     email: result.email,
+    role: result.role,
   })
 }

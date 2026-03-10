@@ -3,9 +3,11 @@
 import { useState, useEffect } from "react"
 import { DashboardLayout } from "@/app/(dashboard)/components/dashboard-layout"
 import { AuthGuard } from "@/app/(auth)/components/auth-guard"
+import { SuperadminGuard } from "@/app/(superadmin)/components/superadmin-guard"
 import { SuperadminNav } from "@/app/(superadmin)/components/superadmin-nav"
 import { Card, CardContent } from "@/components/ui/card"
 import { Activity, Wifi, WifiOff, Clock, CheckCircle, XCircle, HelpCircle } from "lucide-react"
+import { getAuthHeaders } from "@/lib/auth-client"
 import type { StatusOverview, ModelStatusItem } from "@/app/(superadmin)/domain/superadmin.service"
 
 export default function SuperadminStatusPage() {
@@ -15,7 +17,7 @@ export default function SuperadminStatusPage() {
 
   useEffect(() => {
     setLoading(true)
-    fetch(`/api/superadmin/status?days=${days}`)
+    fetch(`/api/superadmin/status?days=${days}`, { headers: getAuthHeaders() })
       .then((r) => r.json())
       .then((res) => {
         if (res.success && res.data) setData(res.data)
@@ -26,7 +28,8 @@ export default function SuperadminStatusPage() {
 
   return (
     <AuthGuard>
-      <DashboardLayout>
+      <SuperadminGuard>
+        <DashboardLayout>
         <div className="p-6 space-y-6">
           <SuperadminNav />
           <div className="flex items-center justify-between">
@@ -107,6 +110,7 @@ export default function SuperadminStatusPage() {
           )}
         </div>
       </DashboardLayout>
+      </SuperadminGuard>
     </AuthGuard>
   )
 }

@@ -117,6 +117,7 @@ export async function loginUser(
       token,
       userId: user.id,
       email: trimmedEmail,
+      role: user.role,
     }
   } catch (error: any) {
     console.error('登录失败:', error)
@@ -188,6 +189,7 @@ export async function registerUser(
       userId: user.id,
       token,
       email: trimmedEmail,
+      role: user.role,
     }
   } catch (error: any) {
     console.error('注册失败:', error)

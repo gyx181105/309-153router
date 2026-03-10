@@ -4,10 +4,19 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { ArrowRight, Copy, Check } from "lucide-react"
 import { useState, useCallback, useRef, useEffect } from "react"
+import { LayoutTextFlip } from "./layout-text-flip"
 
 const CURL_COMMAND = `curl https://api.optrouter.com/v1/chat/completions -H 'Authorization: Bearer YOUR_API_KEY' -d '{"model":"gpt-4o","messages":[{"role":"user","content":"Hello"}]}'`
 const COPY_RESET_MS = 2000
 const TRUST_TECHS = ["OpenAI SDK", "Ollama SDK", "Google Gemini", "Anthropic Claude", "OpenRouter"]
+
+const FLIP_WORDS = [
+  "接入所有 AI 模型",
+  "降低 30% 调用成本",
+  "实现智能路由",
+  "统一 API 管理",
+  "自动故障转移",
+]
 
 export function Hero() {
   const [copied, setCopied] = useState(false)
@@ -39,12 +48,30 @@ export function Hero() {
       />
 
       <div className="hero-inner relative mx-auto flex min-h-[calc(100vh-4rem)] flex-col items-center justify-center px-6 text-center">
-        <h1 className="hero-title">
-          <span className="text-[var(--color-accent-primary)]">一个 API</span> 接入所有 AI 模型
+        <h1
+          className="hero-title"
+          style={{
+            fontSize: 'clamp(28px, 4vw, 44px)',
+            fontWeight: 600,
+            letterSpacing: '-0.02em',
+            lineHeight: 1.2,
+            color: 'var(--color-text-primary)',
+            marginBottom: 'var(--space-5)',
+          }}
+        >
+          <LayoutTextFlip
+            text="一个 API"
+            words={FLIP_WORDS}
+            duration={3000}
+            wordClassName="text-[var(--color-accent-primary)]"
+          />
         </h1>
 
-        <p className="hero-subtitle">
-          30 秒即可完成集成。
+        <p className="hero-subtitle" style={{ marginBottom: 'var(--space-3)' }}>
+          30 秒完成集成，完全兼容 OpenAI API
+        </p>
+        <p className="hero-subtitle" style={{ marginTop: 0, marginBottom: 'var(--space-7)' }}>
+          调用成本最高降低 37%，智能路由自动选择更优模型
         </p>
 
         <div className="flex flex-col items-center gap-3 sm:flex-row">

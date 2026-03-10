@@ -8,8 +8,21 @@ import {
   getInviteRewardRulesForAdmin,
   updateInviteRewardRuleById,
 } from '@/app/(invite)/domain/invite.repo'
+import { verifySuperadmin } from '@/lib/auth-server'
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  // 验证超级管理员权限
+  const auth = await verifySuperadmin(request)
+  if (!auth) {
+    return NextResponse.json(
+      {
+        success: false,
+        detail: '权限不足，仅超级管理员可访问',
+      },
+      { status: 403 }
+    )
+  }
+
   try {
     const rules = await getInviteRewardRulesForAdmin()
     return NextResponse.json({
@@ -41,6 +54,18 @@ export async function GET() {
 }
 
 export async function PATCH(request: NextRequest) {
+  // 验证超级管理员权限
+  const auth = await verifySuperadmin(request)
+  if (!auth) {
+    return NextResponse.json(
+      {
+        success: false,
+        detail: '权限不足，仅超级管理员可访问',
+      },
+      { status: 403 }
+    )
+  }
+
   try {
     const body = await request.json()
     const id = typeof body.id === 'number' ? body.id : undefined

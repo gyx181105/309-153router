@@ -8,7 +8,6 @@ import {
   Settings,
   CreditCard,
   BookOpen,
-  Zap,
   ChevronLeft,
   ChevronRight,
   LogOut,
@@ -28,11 +27,10 @@ import {
 import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
-import { clearUserAuth, getCurrentUserEmail, getCurrentUserId } from "@/lib/auth-client"
+import { clearUserAuth, getCurrentUserEmail, getCurrentUserId, isSuperadmin } from "@/lib/auth-client"
 
 const userNavItems = [
   { icon: LayoutDashboard, label: "概览", id: "overview", href: "/dashboard" },
-  { icon: Zap, label: "模型", id: "models", href: "/models" },
   { icon: Key, label: "API 密钥", id: "keys", href: "/keys" },
   { icon: Users, label: "邀请好友", id: "invite", href: "/invite" },
   { icon: BarChart3, label: "用量分析", id: "analytics", href: "/analytics" },
@@ -109,7 +107,6 @@ export function DashboardSidebar() {
     if (pathname === "/dashboard") return "overview"
     if (pathname === "/invite") return "invite"
     if (pathname === "/keys") return "keys"
-    if (pathname.startsWith("/models")) return "models"
     if (pathname.startsWith("/analytics")) return "analytics"
     if (pathname.startsWith("/recharge")) return "recharge"
     if (pathname.startsWith("/billing")) return "billing"
@@ -120,7 +117,14 @@ export function DashboardSidebar() {
   }, [pathname])
 
   const isSuperadminView = pathname.startsWith("/superadmin")
-  const navItems = isSuperadminView ? superadminNavItems : userNavItems
+  // 根据用户角色过滤菜单项：只有 superadmin 才能看到"模型管理"
+  const filteredUserNavItems = userNavItems.filter(item => {
+    if (item.id === "superadmin") {
+      return isSuperadmin()
+    }
+    return true
+  })
+  const navItems = isSuperadminView ? superadminNavItems : filteredUserNavItems
 
   const handleLogout = () => {
     clearUserAuth()
