@@ -4,8 +4,8 @@
 # ─────────────────────────────────────────────────────────────────────────────
 
 [postgres]
-max_connections = 20
-min_connections = 3   # 预热 3 条连接，避免冷启动等待
+# 开发：多预热几条连接，避免冷启动等待；获取连接超时短一点
+min_connections = 3
 acquire_timeout_secs = 15
 
 [cache]
