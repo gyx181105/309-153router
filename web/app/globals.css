@@ -230,6 +230,26 @@ html, body {
   color: var(--color-text-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* 细滚动条，减少视觉干扰 */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border-default) transparent;
+}
+body::-webkit-scrollbar {
+  width: 8px;
+}
+body::-webkit-scrollbar-track {
+  background: transparent;
+}
+body::-webkit-scrollbar-thumb {
+  background: var(--color-border-default);
+  border-radius: 4px;
+}
+body::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-muted);
 }
 
 /* Utility classes using tokens */

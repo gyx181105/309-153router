@@ -3,7 +3,7 @@
 import { StatCards } from "./stat-cards"
 import { UsageChart } from "./usage-chart"
 import { ModelUsage } from "./model-usage"
-import { ApiKeys } from "./api-keys"
+import { ProviderUsage } from "./provider-usage"
 import { ActivityLog } from "./activity-log"
 import { QuickStart } from "./quick-start"
 import { PopularModels } from "./popular-models"
@@ -15,21 +15,17 @@ export function DashboardShell() {
         {/* Stats */}
         <StatCards />
 
-        {/* Charts row */}
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-5">
-          <div className="lg:col-span-3">
-            <UsageChart />
-          </div>
-          <div className="lg:col-span-2">
-            <ModelUsage />
-          </div>
+        {/* 用量折线图 */}
+        <UsageChart />
+
+        {/* 两个饼图：模型使用分布 + 供应商使用分布 */}
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+          <ModelUsage />
+          <ProviderUsage />
         </div>
 
-        {/* API Keys & Activity */}
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-          <ApiKeys />
-          <ActivityLog />
-        </div>
+        {/* 最近请求 */}
+        <ActivityLog />
 
         {/* Models table */}
         <PopularModels />

@@ -4,6 +4,9 @@ import { useState, useEffect } from 'react'
 import { DashboardLayout } from "../../(dashboard)/components/dashboard-layout"
 import { AuthGuard } from "../../(auth)/components/auth-guard"
 import { InviteStatsCards } from "../components/invite-stats-cards"
+import { InviteChart } from "../components/invite-chart"
+import { InviteCodeUsagePie } from "../components/invite-code-usage-pie"
+import { InviteTimeDistributionPie } from "../components/invite-time-distribution-pie"
 import { InviteCodeList } from "../components/invite-code-list"
 import { InviteUserList } from "../components/invite-user-list"
 import { 
@@ -79,6 +82,15 @@ export default function InvitePage() {
 
           {/* 统计卡片 */}
           <InviteStatsCards stats={stats} />
+
+          {/* 邀请用户趋势曲线图 */}
+          <InviteChart />
+
+          {/* 两个饼图：邀请码邀请数量 + 邀请用户注册时间分布 */}
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+            <InviteCodeUsagePie codes={inviteCodes} loading={loading} />
+            <InviteTimeDistributionPie invites={invites} loading={loading} />
+          </div>
 
           {/* 我的邀请码 */}
           <InviteCodeList

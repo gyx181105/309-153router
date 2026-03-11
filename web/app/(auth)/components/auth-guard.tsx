@@ -29,9 +29,13 @@ export function AuthGuard({ children }: AuthGuardProps) {
     checkAuth()
   }, [router, pathname])
 
-  // 在检查完成前，不渲染任何内容（避免 hydration mismatch）
+  // 在检查完成前，显示与布局一致的加载态，避免页面闪黑
   if (isChecking) {
-    return null
+    return (
+      <div className="flex h-screen w-full items-center justify-center bg-background">
+        <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary border-t-transparent" />
+      </div>
+    )
   }
 
   // 如果未登录，不渲染子组件

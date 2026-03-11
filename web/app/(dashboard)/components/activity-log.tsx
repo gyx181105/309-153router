@@ -4,8 +4,6 @@ import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { getCurrentUserId } from "@/lib/auth-client"
-import { formatDistanceToNow } from "date-fns"
-import { zhCN } from "date-fns/locale"
 
 interface Activity {
   id: string
@@ -144,7 +142,7 @@ export function ActivityLog() {
               />
               {/* Info */}
               <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 flex-wrap">
                   <span className="text-xs font-medium text-card-foreground">
                     {activity.model}
                   </span>
@@ -154,10 +152,10 @@ export function ActivityLog() {
                   >
                     {activity.type}
                   </Badge>
+                  <span className="text-[10px] text-muted-foreground">
+                    {activity.time}
+                  </span>
                 </div>
-                <p className="mt-0.5 text-[10px] text-muted-foreground">
-                  {activity.time}
-                </p>
               </div>
               {/* Metrics */}
               <div className="flex items-center gap-4 text-right shrink-0">

@@ -14,7 +14,20 @@ import {
 import type { UsageStatsParams, UsageStats, ActivityLog, PlanInfo } from './dashboard.types'
 
 /**
- * 格式化时间差为中文
+ * 格式化为绝对时间到秒（用于最近请求等展示）
+ */
+function formatDateTime(date: Date): string {
+  const y = date.getFullYear()
+  const m = String(date.getMonth() + 1).padStart(2, '0')
+  const d = String(date.getDate()).padStart(2, '0')
+  const h = String(date.getHours()).padStart(2, '0')
+  const min = String(date.getMinutes()).padStart(2, '0')
+  const s = String(date.getSeconds()).padStart(2, '0')
+  return `${y}-${m}-${d} ${h}:${min}:${s}`
+}
+
+/**
+ * 格式化时间差为中文（保留供其他处使用）
  */
 function formatTimeAgo(date: Date): string {
   const now = new Date()
@@ -147,7 +160,7 @@ export async function fetchActivityLogs(userId: string, limit: number = 20): Pro
       status: log.status.toLowerCase() as 'success' | 'error' | 'rate_limited',
       tokens: totalTokens,
       latency: latency,
-      time: formatTimeAgo(log.createdAt),
+      time: formatDateTime(log.createdAt),
     }
   })
 }

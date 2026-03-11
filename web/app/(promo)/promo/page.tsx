@@ -12,7 +12,7 @@ import { PromoShare } from "../components/promo-share"
 import { PromoRules } from "../components/promo-rules"
 import { PromoFaq } from "../components/promo-faq"
 import { PromoCta } from "../components/promo-cta"
-import { PromoFooter } from "../components/promo-footer"
+import { Footer } from "@/components/footer"
 
 function PromoContent() {
   const searchParams = useSearchParams()
@@ -37,7 +37,7 @@ function PromoContent() {
       <PromoRules />
       <PromoFaq />
       <PromoCta registerHref={registerHref} />
-      <PromoFooter registerHref={registerHref} />
+      <Footer />
     </div>
   )
 }

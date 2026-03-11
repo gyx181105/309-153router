@@ -33,13 +33,17 @@ export function InviteUserList({ invites, loading }: InviteUserListProps) {
             {invites.map((invite) => (
               <div
                 key={invite.id}
-                className="flex items-center justify-between p-3 border rounded-lg"
+                className="flex items-center justify-between gap-4 p-3 border rounded-lg"
               >
-                <div>
-                  <div className="font-medium">{invite.invitee_email || '未知用户'}</div>
-                  <div className="text-xs text-muted-foreground mt-1">
-                    {invite.used_at ? format(new Date(invite.used_at), 'yyyy-MM-dd HH:mm') : ''}
-                  </div>
+                <div className="flex items-center gap-3 min-w-0 flex-1">
+                  <span className="font-medium truncate">
+                    {invite.invitee_email || "未知用户"}
+                  </span>
+                  <span className="text-xs text-muted-foreground shrink-0">
+                    {invite.used_at
+                      ? format(new Date(invite.used_at), "yyyy-MM-dd HH:mm")
+                      : ""}
+                  </span>
                 </div>
               </div>
             ))}

@@ -3,8 +3,7 @@
 import { useState } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Menu, X, Gift } from "lucide-react"
-import { ThemeToggle } from "./theme-toggle"
+import { Menu, X } from "lucide-react"
 
 const navLinks = [
   { href: "#features", label: "功能" },
@@ -18,94 +17,74 @@ export function Navbar() {
 
   return (
     <header 
-      className="fixed top-0 left-0 right-0 z-50 border-b"
-      style={{
-        borderColor: 'var(--color-border-default)',
-        backgroundColor: 'var(--color-bg-page)',
-        backdropFilter: 'blur(12px)',
-      }}
+      className="fixed top-0 left-0 right-0 z-50 border-b border-border/60 bg-[var(--color-bg-page)]/80 backdrop-blur-xl"
     >
       <nav 
-        className="mx-auto flex h-16 items-center justify-between px-6"
+        className="flex h-16 w-full items-center justify-between px-6"
       >
-        {/* Logo */}
-        <Link 
-          href="/" 
-          className="flex items-center gap-2"
-          style={{ 
-            color: 'var(--color-text-primary)',
-            textDecoration: 'none',
-            fontWeight: 600,
-            fontSize: '18px',
-            letterSpacing: '-0.02em',
-          }}
-        >
-          <div 
-            className="flex h-8 w-8 items-center justify-center rounded-lg"
-            style={{
-              background: 'var(--color-button-primary-bg)',
-              color: 'var(--color-button-primary-text)',
+        {/* 左侧：Logo + 导航链接居左 */}
+        <div className="flex items-center gap-8">
+          <Link 
+            href="/" 
+            className="flex items-center gap-2.5 transition-opacity hover:opacity-90"
+            style={{ 
+              color: 'var(--color-text-primary)',
+              textDecoration: 'none',
+              fontWeight: 600,
+              fontSize: '16px',
+              letterSpacing: '-0.03em',
             }}
           >
-            <span style={{ fontSize: '14px', fontWeight: 700 }}>O</span>
-          </div>
-          <span>OptRouter</span>
-        </Link>
-
-        {/* Desktop Navigation */}
-        <div className="hidden items-center gap-8 md:flex">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className="text-sm transition-colors hover:text-foreground"
+            <div 
+              className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-xl"
               style={{
-                color: 'var(--color-text-body)',
-                textDecoration: 'none',
-                transition: 'color var(--motion-base) var(--ease-standard)',
+                background: 'var(--color-button-primary-bg)',
+                color: 'var(--color-button-primary-text)',
               }}
             >
-              {link.label}
-            </Link>
-          ))}
+              <span style={{ fontSize: '12px', fontWeight: 700 }}>O</span>
+            </div>
+            <span>OptRouter</span>
+          </Link>
+
+          {/* 导航链接 - 紧挨 Logo 左侧排列 */}
+          <div className="hidden items-center gap-5 md:flex">
+            {navLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="transition-colors duration-200 hover:text-[var(--color-text-primary)]"
+                style={{
+                  color: 'var(--color-text-body)',
+                  textDecoration: 'none',
+                  fontSize: '13px',
+                  fontWeight: 600,
+                  letterSpacing: '0.01em',
+                }}
+              >
+                {link.label}
+              </Link>
+            ))}
+          </div>
         </div>
 
-        {/* Desktop Actions */}
-        <div className="hidden items-center gap-3 md:flex">
-          <Link href="/promo">
-            <Button 
-              size="sm"
-              className="ds-btn-primary px-4 py-2 text-xs"
-            >
-              <Gift className="mr-1.5 h-3.5 w-3.5" />
-              邀请有礼
-            </Button>
-          </Link>
-          <Link href="/login">
-            <Button 
-              variant="ghost" 
-              size="sm"
-              style={{
-                color: 'var(--color-text-body)',
-              }}
-            >
-              登录
-            </Button>
+        {/* 右侧：只保留一个主按钮「开始使用」，其余弱化 */}
+        <div className="hidden items-center gap-4 md:flex">
+          <Link href="/promo" className="text-[13px] font-semibold text-[var(--color-text-body)] no-underline transition-colors hover:text-[var(--color-text-primary)]">
+            邀请有礼
           </Link>
           <Link href="/login">
             <Button 
               size="sm"
-              className="ds-btn-primary px-4 py-2 text-xs"
+              className="h-8 rounded-lg bg-[var(--color-button-primary-bg)] px-4 text-[13px] font-semibold text-white shadow-sm transition-all hover:bg-[var(--color-button-primary-hover)] hover:shadow"
             >
               开始使用
             </Button>
           </Link>
-          <ThemeToggle />
         </div>
 
         {/* Mobile Menu Button */}
         <div className="flex items-center gap-2 md:hidden">
-          <ThemeToggle />
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             style={{
@@ -140,10 +119,12 @@ export function Navbar() {
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-sm transition-colors hover:text-foreground"
+                className="transition-colors hover:opacity-80"
                 style={{
                   color: 'var(--color-text-body)',
                   textDecoration: 'none',
+                  fontSize: '13px',
+                  fontWeight: 600,
                   transition: 'color var(--motion-base) var(--ease-standard)',
                 }}
                 onClick={() => setMobileMenuOpen(false)}
@@ -152,29 +133,12 @@ export function Navbar() {
               </Link>
             ))}
             <div className="mt-4 flex flex-col gap-3">
-              <Link href="/promo" className="w-full">
-                <Button 
-                  className="w-full ds-btn-primary"
-                >
-                  <Gift className="mr-1.5 h-4 w-4" />
-                  邀请有礼
-                </Button>
+              <Link href="/promo" className="w-full text-center text-[13px] font-semibold text-[var(--color-text-body)] no-underline hover:text-[var(--color-text-primary)]">
+                邀请有礼
               </Link>
               <Link href="/login" className="w-full">
                 <Button 
-                  variant="outline" 
-                  className="w-full"
-                  style={{
-                    borderColor: 'var(--color-button-secondary-border)',
-                    color: 'var(--color-button-secondary-text)',
-                  }}
-                >
-                  登录
-                </Button>
-              </Link>
-              <Link href="/login" className="w-full">
-                <Button 
-                  className="w-full ds-btn-primary"
+                  className="w-full h-9 rounded-lg bg-[var(--color-button-primary-bg)] text-[13px] font-semibold text-white hover:bg-[var(--color-button-primary-hover)]"
                 >
                   开始使用
                 </Button>

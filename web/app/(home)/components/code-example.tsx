@@ -80,12 +80,12 @@ export function CodeExample() {
         className="mx-auto max-w-7xl px-6"
         style={{ maxWidth: 'var(--layout-max-width)' }}
       >
-        <div className="grid gap-12 lg:grid-cols-2 lg:gap-16">
+        <div className="grid gap-12 lg:grid-cols-2 lg:gap-16 lg:items-start">
           {/* Left Content */}
-          <div className="flex flex-col justify-center">
+          <div className="flex flex-col justify-center lg:sticky lg:top-24 text-base">
             <h2 
               style={{
-                fontSize: 'clamp(28px, 5vw, 40px)',
+                fontSize: 'clamp(22px, 4vw, 32px)',
                 fontWeight: 600,
                 letterSpacing: '-0.02em',
                 color: 'var(--color-text-primary)',
@@ -96,16 +96,19 @@ export function CodeExample() {
             <p 
               style={{
                 marginTop: 'var(--space-4)',
-                fontSize: '18px',
+                fontSize: '16px',
                 lineHeight: '1.6',
                 color: 'var(--color-text-body)',
               }}
             >
               完全兼容 OpenAI API 格式，只需更改 baseURL 即可切换到 OptRouter。
               支持所有 OpenAI SDK、LangChain、LlamaIndex 等框架。
+              <span style={{ display: 'block', marginTop: 'var(--space-2)', fontSize: '14px', color: 'var(--color-text-body)', opacity: 0.9 }}>
+                示例中为示意地址；本地开发可使用 <code style={{ fontFamily: 'var(--font-mono)', padding: '0 4px', borderRadius: 4, backgroundColor: 'var(--color-bg-muted)' }}>http://localhost:3001/v1</code>，生产环境请替换为实际网关地址。
+              </span>
             </p>
             <ul 
-              className="mt-8 space-y-4"
+              className="mt-8 space-y-4 text-sm"
               style={{ marginTop: 'var(--space-6)' }}
             >
               {[

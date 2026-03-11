@@ -8,7 +8,7 @@ import { CodeExample } from "./(home)/components/code-example"
 import { Testimonials } from "./(home)/components/testimonials"
 import { FAQ } from "./(home)/components/faq"
 import { CTA } from "./(home)/components/cta"
-import { Footer } from "./(home)/components/footer"
+import { Footer } from "@/components/footer"
 
 export default function Home() {
   return (
