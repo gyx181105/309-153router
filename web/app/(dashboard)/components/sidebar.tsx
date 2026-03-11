@@ -57,7 +57,15 @@ interface PlanInfo {
 export function DashboardSidebar() {
   const router = useRouter()
   const pathname = usePathname()
-  const [collapsed, setCollapsed] = useState(false)
+  const [collapsed, setCollapsed] = useState(() => {
+    if (typeof window === "undefined") return false
+    return localStorage.getItem("sidebar-collapsed") === "true"
+  })
+
+  const toggleCollapsed = (value: boolean) => {
+    setCollapsed(value)
+    localStorage.setItem("sidebar-collapsed", String(value))
+  }
   const [userEmail, setUserEmail] = useState<string | null>(null)
   const [planInfo, setPlanInfo] = useState<PlanInfo | null>(null)
   const [planLoading, setPlanLoading] = useState(true)
@@ -140,15 +148,32 @@ export function DashboardSidebar() {
         )}
       >
         {/* Logo */}
-        <div className="flex h-14 items-center gap-3 border-b border-sidebar-border px-4">
-          <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary">
-            <Layers className="size-4 text-primary-foreground" />
+        <div
+          className={cn(
+            "flex h-14 items-center border-b border-sidebar-border",
+            collapsed ? "justify-between px-2" : "gap-2 px-3"
+          )}
+        >
+          <div
+            className={cn(
+              "flex shrink-0 items-center justify-center rounded-lg bg-primary",
+              collapsed ? "size-7" : "size-8"
+            )}
+          >
+            <Layers className={cn(collapsed ? "size-3.5" : "size-4", "text-primary-foreground")} />
           </div>
           {!collapsed && (
-            <span className="text-sm font-semibold text-sidebar-foreground tracking-tight">
+            <span className="flex-1 text-sm font-semibold text-sidebar-foreground tracking-tight">
               OptRouter
             </span>
           )}
+          <button
+            onClick={() => toggleCollapsed(!collapsed)}
+            className="flex shrink-0 items-center justify-center rounded-md p-1 text-muted-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-foreground transition-colors"
+            aria-label={collapsed ? "展开侧边栏" : "收起侧边栏"}
+          >
+            {collapsed ? <ChevronRight className="size-3.5" /> : <ChevronLeft className="size-4" />}
+          </button>
         </div>
 
         {/* Nav */}
@@ -196,7 +221,7 @@ export function DashboardSidebar() {
                   <div className="h-3 w-8 animate-pulse rounded bg-border" />
                 ) : (
                   <Badge variant="secondary" className="text-[10px] bg-primary/15 text-primary border-0">
-                    {planInfo?.planName || '免费'}
+                    {planInfo?.planName || '普通'}
                   </Badge>
                 )}
               </div>
@@ -260,17 +285,6 @@ export function DashboardSidebar() {
             )}
           </div>
 
-          {/* Collapse toggle */}
-          <button
-            onClick={() => setCollapsed(!collapsed)}
-            className="mt-1 flex w-full items-center justify-center rounded-md py-1.5 text-muted-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-foreground transition-colors"
-          >
-            {collapsed ? (
-              <ChevronRight className="size-4" />
-            ) : (
-              <ChevronLeft className="size-4" />
-            )}
-          </button>
         </div>
       </aside>
     </TooltipProvider>

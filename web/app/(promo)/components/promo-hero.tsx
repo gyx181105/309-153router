@@ -63,9 +63,10 @@ export function PromoHero({ registerHref, inviteCode }: PromoHeroProps) {
             letterSpacing: "-0.03em",
             color: "var(--color-text-primary)",
             marginBottom: "16px",
+            whiteSpace: "nowrap",
           }}
         >
-          邀请好友，一起省钱用 AI
+          下一代 AI 基础设施，从 OptRouter 开始
         </h1>
 
         <p
@@ -73,18 +74,11 @@ export function PromoHero({ registerHref, inviteCode }: PromoHeroProps) {
             fontSize: "clamp(15px, 2vw, 18px)",
             lineHeight: 1.6,
             color: "var(--color-text-body)",
-            maxWidth: "520px",
+            maxWidth: "560px",
             margin: "0 auto 32px",
           }}
         >
-          每邀请一位好友完成首充，你即可获得{" "}
-          <strong
-            className="inline-flex items-center"
-            style={{ color: "var(--color-brand)", fontSize: "1.1em" }}
-          >
-            ¥20 奖励
-          </strong>
-          ，无上限。好友也能享受智能路由带来的低成本 AI 调用。
+          30 秒接入所有 AI 模型，让 AI 像水电一样简单，加入 OptRouter 代理体系，共享万亿市场。
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3">

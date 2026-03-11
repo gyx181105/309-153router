@@ -227,7 +227,7 @@ export async function fetchUserPlanInfo(userId: string): Promise<PlanInfo> {
   // 如果没有订阅，返回默认值
   if (!subscription) {
     return {
-      planName: '免费',
+      planName: '普通',
       usedAmount: 0,
       totalAmount: 0,
       balance: Number(balance),
