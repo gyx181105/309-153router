@@ -33,7 +33,7 @@ export default function DocsPage() {
                 </CardHeader>
                 <CardContent className="space-y-3 text-sm">
                   <p>OptRouter Gateway 为 <strong>OpenAI 兼容</strong>网关，只需将 <code className="px-1.5 py-0.5 rounded bg-muted font-mono text-xs">base_url</code> 改为网关地址即可接入。</p>
-                  <p className="text-muted-foreground">网关地址示例（开发环境）：</p>
+                  <p className="text-muted-foreground">网关地址：</p>
                   <pre className="p-3 rounded-lg bg-muted text-xs overflow-x-auto border border-border">
 {`${GATEWAY_EXAMPLE}
 
