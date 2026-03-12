@@ -5,7 +5,11 @@ import { AuthGuard } from "../../(auth)/components/auth-guard"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
+<<<<<<< HEAD
 const GATEWAY_EXAMPLE = "https://api.optrouter.com"
+=======
+const GATEWAY_EXAMPLE = "http://localhost:9115"
+>>>>>>> 50b20cf2239153423e0a8002edccbeaef73ee712
 
 export default function DocsPage() {
   return (

@@ -25,13 +25,22 @@ OptRouter Gateway 是一个 **OpenAI 兼容**的 AI 网关，支持多 Provider 
 
 | 环境 | 地址 |
 |---|---|
+<<<<<<< HEAD
 | 生产环境 | `https://api.optrouter.com` |
 | 本地开发 | `http://localhost:3001` |
+=======
+| 本地开发 | `http://localhost:9115` |
+| 生产环境 | 联系管理员获取域名 |
+>>>>>>> 50b20cf2239153423e0a8002edccbeaef73ee712
 
 **最简示例（curl）**
 
 ```bash
+<<<<<<< HEAD
 curl -X POST https://api.optrouter.com/v1/chat/completions \
+=======
+curl -X POST http://localhost:9115/v1/chat/completions \
+>>>>>>> 50b20cf2239153423e0a8002edccbeaef73ee712
   -H "Authorization: Bearer sk-你的ApiKey" \
   -H "Content-Type: application/json" \
   -d '{
@@ -157,7 +166,11 @@ data: [DONE]
 
 ```bash
 # 示例：请求 eco 档位，系统自动路由到低价模型
+<<<<<<< HEAD
 curl -X POST https://api.optrouter.com/v1/chat/completions \
+=======
+curl -X POST http://localhost:9115/v1/chat/completions \
+>>>>>>> 50b20cf2239153423e0a8002edccbeaef73ee712
   -H "Authorization: Bearer sk-你的ApiKey" \
   -H "Content-Type: application/json" \
   -d '{
@@ -176,7 +189,11 @@ X-Opt-Strategy: intelligent
 
 ```bash
 # 示例：请求 gpt-4o，但允许网关在任务简单时降级到 mini
+<<<<<<< HEAD
 curl -X POST https://api.optrouter.com/v1/chat/completions \
+=======
+curl -X POST http://localhost:9115/v1/chat/completions \
+>>>>>>> 50b20cf2239153423e0a8002edccbeaef73ee712
   -H "Authorization: Bearer sk-你的ApiKey" \
   -H "X-Opt-Strategy: intelligent" \
   -H "Content-Type: application/json" \
@@ -224,7 +241,11 @@ from openai import OpenAI
 
 client = OpenAI(
     api_key="sk-你的ApiKey",
+<<<<<<< HEAD
     base_url="https://api.optrouter.com/v1"
+=======
+    base_url="http://localhost:9115/v1"
+>>>>>>> 50b20cf2239153423e0a8002edccbeaef73ee712
 )
 
 # 普通调用
@@ -266,7 +287,11 @@ for chunk in stream:
 import uuid
 from openai import OpenAI
 
+<<<<<<< HEAD
 client = OpenAI(api_key="sk-你的ApiKey", base_url="https://api.optrouter.com/v1")
+=======
+client = OpenAI(api_key="sk-你的ApiKey", base_url="http://localhost:9115/v1")
+>>>>>>> 50b20cf2239153423e0a8002edccbeaef73ee712
 session_id = str(uuid.uuid4())  # 同一会话保持不变
 
 def chat(user_message: str) -> str:
@@ -290,7 +315,11 @@ import OpenAI from "openai";
 
 const client = new OpenAI({
   apiKey: "sk-你的ApiKey",
+<<<<<<< HEAD
   baseURL: "https://api.optrouter.com/v1",
+=======
+  baseURL: "http://localhost:9115/v1",
+>>>>>>> 50b20cf2239153423e0a8002edccbeaef73ee712
 });
 
 // 普通非流式调用
@@ -318,7 +347,11 @@ for await (const chunk of stream) {
 **非流式：**
 
 ```bash
+<<<<<<< HEAD
 curl -s -X POST https://api.optrouter.com/v1/chat/completions \
+=======
+curl -s -X POST http://localhost:9115/v1/chat/completions \
+>>>>>>> 50b20cf2239153423e0a8002edccbeaef73ee712
   -H "Authorization: Bearer sk-你的ApiKey" \
   -H "Content-Type: application/json" \
   -d '{
@@ -330,8 +363,14 @@ curl -s -X POST https://api.optrouter.com/v1/chat/completions \
 **流式（实时输出）：**
 
 ```bash
+<<<<<<< HEAD
 curl -N -X POST https://api.optrouter.com/v1/chat/completions \
   -H "Authorization: Bearer sk-你的ApiKey" \
+=======
+
+curl -N -X POST http://localhost:9115/v1/chat/completions \
+  -H "Authorization: Bearer sk-mm61wdhk-2fcvs5uq9he" \
+>>>>>>> 50b20cf2239153423e0a8002edccbeaef73ee712
   -H "Content-Type: application/json" \
   -d '{
     "model": "premium",
@@ -343,8 +382,14 @@ curl -N -X POST https://api.optrouter.com/v1/chat/completions \
 **智能路由（eco 档位）：**
 
 ```bash
+<<<<<<< HEAD
 curl -s -X POST https://api.optrouter.com/v1/chat/completions \
   -H "Authorization: Bearer sk-你的ApiKey" \
+=======
+
+curl -s -X POST http://localhost:9115/v1/chat/completions \
+  -H "Authorization: Bearer sk-mm61wdhk-2fcvs5uq9he" \
+>>>>>>> 50b20cf2239153423e0a8002edccbeaef73ee712
   -H "Content-Type: application/json" \
   -H "X-Session-Id: $(uuidgen)" \
   -d '{
@@ -358,14 +403,22 @@ curl -s -X POST https://api.optrouter.com/v1/chat/completions \
 ### 查询可用模型
 
 ```bash
+<<<<<<< HEAD
 curl -s https://api.optrouter.com/v1/models \
+=======
+curl -s http://localhost:9115/v1/models \
+>>>>>>> 50b20cf2239153423e0a8002edccbeaef73ee712
   -H "Authorization: Bearer sk-你的ApiKey" | jq '.data[].id'
 ```
 
 ### 查询模型单价
 
 ```bash
+<<<<<<< HEAD
 curl -s https://api.optrouter.com/v1/models/gpt-4o/pricing \
+=======
+curl -s http://localhost:9115/v1/models/gpt-4o/pricing \
+>>>>>>> 50b20cf2239153423e0a8002edccbeaef73ee712
   -H "Authorization: Bearer sk-你的ApiKey"
 ```
 
@@ -433,7 +486,11 @@ def chat_with_retry(client, **kwargs):
 
 ```bash
 # 查看响应头
+<<<<<<< HEAD
 curl -i -X POST https://api.optrouter.com/v1/chat/completions \
+=======
+curl -i -X POST http://localhost:9115/v1/chat/completions \
+>>>>>>> 50b20cf2239153423e0a8002edccbeaef73ee712
   -H "Authorization: Bearer sk-你的ApiKey" \
   -H "Content-Type: application/json" \
   -d '{"model":"gpt-4o","messages":[{"role":"user","content":"hi"}]}'
