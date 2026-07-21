@@ -41,7 +41,7 @@ const userNavItems = [
   { icon: FlaskConical, labelKey: "dashboard.playground", id: "playground", href: "/playground" },
   { icon: Wallet, labelKey: "dashboard.recharge", id: "recharge", href: "/recharge" },
   { icon: CreditCard, labelKey: "dashboard.billing", id: "billing", href: "/billing" },
-  { icon: BookOpen, labelKey: "dashboard.docs", id: "docs", href: "/docs" },
+  { icon: BookOpen, labelKey: "dashboard.docs", id: "docs", href: "/docs/quickstart" },
   { icon: Settings, labelKey: "dashboard.settings", id: "settings", href: "/settings" },
   { icon: ShieldCheck, labelKey: "dashboard.modelManage", id: "superadmin", href: "/superadmin" },
 ]
@@ -124,7 +124,6 @@ export function DashboardSidebar() {
     if (pathname?.includes("/playground")) return "playground"
     if (pathname?.includes("/recharge")) return "recharge"
     if (pathname?.includes("/billing")) return "billing"
-    if (pathname?.includes("/docs")) return "docs"
     if (pathname?.includes("/settings")) return "settings"
     if (pathname?.includes("/superadmin")) return "superadmin"
     return "overview"

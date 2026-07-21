@@ -70,7 +70,7 @@ export function DashboardOnboarding() {
             </LocaleLink>
           </Button>
           <Button asChild size="sm" variant="outline" className="h-8 text-xs gap-1">
-            <LocaleLink href="/docs">
+            <LocaleLink href="/docs/quickstart">
               <BookOpen className="size-3.5" />
               {t("dashboard.viewDocs")}
             </LocaleLink>

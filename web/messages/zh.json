@@ -2,6 +2,8 @@
   "common": {
     "siteName": "OptRouter",
     "start": "开始使用",
+    "login": "登录",
+    "register": "免费注册",
     "menu": "菜单",
     "copied": "已复制",
     "copyCurl": "复制 curl 示例命令",
@@ -9,9 +11,10 @@
   },
   "nav": {
     "solutions": "解决方案",
-    "enterpriseNav": "企业方案",
-    "features": "功能",
-    "integration": "集成",
+    "enterpriseNav": "企业服务",
+    "features": "核心能力",
+    "integration": "快速接入",
+    "docs": "API 文档",
     "testimonials": "用户反馈",
     "faq": "FAQ",
     "news": "新闻资讯",
@@ -19,18 +22,18 @@
   },
   "hero": {
     "ariaLabel": "产品介绍",
-    "badge": "生产级 · 统一路由",
+    "badge": "OpenAI SDK 兼容",
     "headline1": "一个 API，接入全球主流大模型",
-    "headline2": "更低成本，更高稳定性，更少接入负担",
-    "subtitle": "兼容 OpenAI API，一处接入 Claude、Gemini、DeepSeek 等主流模型。智能路由与自动容灾降低接入复杂度，让团队更专注产品。",
-    "ctaPrimary": "免费开始使用",
+    "headline2": "支持 Claude、Gemini、DeepSeek、OpenAI",
+    "subtitle": "兼容 OpenAI API，统一接入主流大模型。智能路由与自动容灾，帮团队降低接入与运维成本。",
+    "ctaPrimary": "免费注册",
     "ctaDemo": "预约演示",
-    "linkDocs": "查看 API 文档",
-    "linkEnterprise": "咨询企业方案",
-    "tagline": "流式输出、函数调用与多模型热切换；既可快速迭代，也支持企业级部署与统一管理。",
-    "trustLabel": "兼容所有主流 AI 框架",
+    "linkDocs": "快速接入",
+    "linkEnterprise": "了解企业方案",
+    "tagline": "注册后创建 API Key，即可开始调用。",
+    "trustLabel": "支持的主流模型",
     "pill0": "约 30 秒接入",
-    "pill1": "OpenAI 兼容",
+    "pill1": "OpenAI SDK 兼容",
     "pill2": "智能路由 · 自动容灾",
     "snapshotTitle": "实时路由快照",
     "snapshotLive": "实时",
@@ -45,14 +48,14 @@
     "themeToggle": "切换深色/浅色模式"
   },
   "features": {
-    "title": "为什么选择 OptRouter",
-    "subtitle": "AI 模型的统一入口，让团队专注产品创新，而不是陷在接入、切换、计费和稳定性问题里。",
-    "item0Title": "智能路由",
-    "item0Desc": "根据延迟、成本、性能和可用性自动选择更合适的模型，支持 fallback 自动切换。",
-    "item1Title": "OpenAI 兼容",
-    "item1Desc": "完全兼容 OpenAI API 格式，沿用熟悉的 SDK 和调用方式，迁移成本更低。",
-    "item2Title": "统一接口",
-    "item2Desc": "一个 API 访问多个主流模型供应商，无需重复适配和维护多套接入逻辑。",
+    "title": "三项核心能力",
+    "subtitle": "统一入口，把接入、稳定性和成本管理放在一处。",
+    "item0Title": "一个 API 接入多种模型",
+    "item0Desc": "兼容 OpenAI SDK，统一调用 Claude、Gemini、DeepSeek、OpenAI 等主流模型，无需维护多套接口。",
+    "item1Title": "智能路由与自动容灾",
+    "item1Desc": "按延迟、成本与可用性选择更合适的模型；上游异常时自动切换，保障调用连续性。",
+    "item2Title": "统一计费与用量管理",
+    "item2Desc": "在控制台查看余额、调用量与费用明细，让 AI 支出清晰可控。",
     "item3Title": "高性能网关",
     "item3Desc": "支持流式响应、高并发代理与低延迟调用，适合真实业务场景持续运行。",
     "item4Title": "统一计费",
@@ -111,29 +114,29 @@
     "card3Title": "需要私有化或定制能力的客户",
     "card3Desc": "希望获得网关定制、供应商接入和企业级管控能力。"
   },
-  "enterprise": {
-    "title": "真实业务更关心的，不只是能接入，还要能管得住",
-    "subtitle": "从权限到成本与审计，为规模化运营做好准备。",
-    "item0Title": "统一权限管理",
-    "item0Desc": "API Key 管理、团队权限、调用边界控制。",
-    "item1Title": "用量与成本分析",
-    "item1Desc": "清楚看到每个模型的调用量、花费与使用趋势。",
-    "item2Title": "路由策略配置",
-    "item2Desc": "按成本优先、速度优先、稳定性优先灵活调整。",
-    "item3Title": "审计与运维支持",
-    "item3Desc": "日志、告警、调用追踪与问题定位更方便。"
+  "consolePreview": {
+    "title": "登录后即可掌控调用全貌",
+    "subtitle": "在控制台查看余额、API Key、调用量、成功率、延迟与日志，统一管理模型调用。",
+    "consoleAria": "登录后控制台首页预览：余额、API Key、调用量、成功率与延迟",
+    "consoleWindowTitle": "OptRouter 控制台",
+    "consoleBalance": "账户余额",
+    "consoleKeys": "API Key 管理",
+    "consoleUsage": "调用量与费用",
+    "consoleHealth": "成功率、延迟与日志",
+    "consoleNote": "控制台功能预览",
+    "loginHint": "登录查看控制台 →"
   },
   "faq": {
     "title": "常见问题",
-    "subtitle": "关于 OptRouter 的常见问题解答",
-    "q0": "OptRouter 与直接调用 OpenAI API 有什么区别？",
-    "a0": "OptRouter 完全兼容 OpenAI API 格式，您只需更改 baseURL 即可无缝切换。除此之外，OptRouter 提供智能路由（自动选择最优模型）、自动 fallback（故障自动切换）、统一计费、用量统计等增值功能，帮助您降低成本、提升稳定性。",
-    "q1": "支持哪些 AI 模型？",
-    "a1": "目前支持 OpenAI（GPT-4o、GPT-4 Turbo 等）、Anthropic（Claude 3.5 Sonnet 等）、Google（Gemini Pro）、DeepSeek、Qwen 等主流模型。我们会持续接入更多供应商和模型。",
-    "q2": "如何开始使用？",
-    "a2": "注册账号后，系统会自动为您分配 API Key。将代码中的 baseURL 替换为 OptRouter 的地址，即可开始使用。整个过程不到 30 秒。",
-    "q3": "计费方式是怎样的？",
-    "a3": "按实际使用量计费（人民币），不同模型价格不同。您可以在仪表板中查看详细的用量统计和费用明细。注册即送免费额度，无需信用卡。",
+    "subtitle": "四个最常被问到的问题",
+    "q0": "支持哪些模型？",
+    "a0": "目前支持 OpenAI、Anthropic Claude、Google Gemini、DeepSeek、Qwen 等主流模型，并持续接入更多供应商。",
+    "q1": "如何计费？",
+    "a1": "按实际调用量计费（人民币），不同模型价格不同。可在控制台查看用量与费用明细；注册即送免费额度，无需信用卡。",
+    "q2": "是否兼容 OpenAI SDK？",
+    "a2": "完全兼容。将 baseURL 改为 https://api.optrouter.com/v1，并使用您在控制台创建的 API Key 即可。",
+    "q3": "如何创建 API Key？",
+    "a3": "注册并登录后，在控制台自行创建 API Key。创建后即可充值并开始调用，不会自动分配。",
     "q4": "数据安全有保障吗？",
     "a4": "我们不会存储您的对话内容，所有请求通过加密通道透传到上游模型供应商。API Key 采用哈希存储，支持企业级权限管理和数据隔离。",
     "q5": "智能路由是如何工作的？",
@@ -153,10 +156,10 @@
   },
   "cta": {
     "title": "准备好开始了吗？",
-    "subtitle": "免费注册，立即获得 ¥5 额度。无需信用卡，随时取消。从快速验证到正式接入，用同一套入口开始。",
-    "buttonStart": "免费开始使用",
-    "buttonDocs": "查看文档",
-    "enterpriseHint": "企业客户可直接提交需求，获取方案与报价。"
+    "subtitle": "免费注册，创建 API Key，即可调用主流大模型。无需信用卡。",
+    "buttonStart": "免费注册",
+    "buttonDocs": "查看接入示例",
+    "enterpriseHint": "需要私有化部署、企业权限或定制路由？了解企业方案"
   },
   "contact": {
     "title": "联系我们，获取接入建议、方案评估与报价支持",
@@ -178,11 +181,17 @@
     "errorNetwork": "网络错误，请稍后重试"
   },
   "codeExample": {
-    "title": "几分钟内完成集成",
-    "sampleHint": "沿用熟悉的调用方式，不改业务逻辑，先接入再优化。",
-    "subtitle": "完全兼容 OpenAI API 格式，只需更改 baseURL 即可切换到 OptRouter。支持 OpenAI SDK、LangChain、LlamaIndex 等主流框架，适合从 Demo 到生产环境的持续接入。",
+    "title": "三步开始调用",
+    "sampleHint": "兼容 OpenAI SDK：改 baseURL，用环境变量中的 API Key。",
+    "subtitle": "注册、创建密钥、充值后即可调用。旁边是一段可直接复制的示例代码。",
     "subtitleNote": "示例中为示意地址；本地开发可使用",
     "subtitleNoteEnd": "，生产环境请替换为实际网关地址。",
+    "step0Title": "注册登录",
+    "step0Desc": "免费注册 OptRouter 账号并登录控制台。",
+    "step1Title": "创建 API Key",
+    "step1Desc": "在控制台自行创建 API Key，妥善保存后用于调用。",
+    "step2Title": "充值并调用",
+    "step2Desc": "充值获取额度后，将 baseURL 指向 OptRouter 即可开始调用。",
     "bullet0": "完全兼容 OpenAI API 格式",
     "bullet1": "支持流式响应和函数调用",
     "bullet2": "智能路由与自动 fallback",
@@ -190,7 +199,9 @@
     "tabJs": "JavaScript",
     "tabPy": "Python",
     "tabCurl": "cURL",
-    "copy": "复制"
+    "copy": "复制",
+    "baseUrlLabel": "Base URL",
+    "copyBaseUrl": "复制 Base URL"
   },
   "testimonials": {
     "title": "用户怎么评价 OptRouter",
@@ -228,7 +239,7 @@
   },
   "home": {
     "title": "OptRouter - 一个 API 接入全球主流大模型",
-    "description": "兼容 OpenAI API，统一接入 OpenAI、Claude、Gemini、DeepSeek 等；智能路由与自动故障转移，更低成本、更高稳定性、更少接入负担。"
+    "description": "兼容 OpenAI SDK，统一接入 OpenAI、Claude、Gemini、DeepSeek 等。智能路由与自动容灾，统一计费与用量管理。免费注册，自行创建 API Key 即可调用。"
   },
   "wxPoster": {
     "ctaAddWechat": "添加微信",
@@ -251,7 +262,7 @@
       "point2": "优化调用成本",
       "trust": "适合 AI 产品、SaaS、创业团队与企业技术团队",
       "primaryCta": "免费试用",
-      "secondaryCta": "加微信"
+      "secondaryCta": "提交企业需求"
     },
     "why": {
       "title": "你可能正遇到这些",
@@ -289,18 +300,11 @@
       "item2": "创业团队",
       "item3": "企业 AI 应用团队"
     },
-    "wechat": {
-      "title": "扫码添加微信，获取接入方案",
-      "qrAlt": "微信二维码",
-      "qrPlaceholder": "微信二维码加载失败",
-      "caption": "长按识别二维码"
-    },
     "convert": {
-      "title": "立即联系",
-      "subtitle": "建议先扫微信添加顾问，获取接入方案；也可留手机号，我们会尽快联系你。",
-      "or": "或留个电话",
+      "title": "提交企业需求",
+      "subtitle": "留下联系方式，我们会尽快与你沟通接入方案。也可先免费试用。",
       "phonePlaceholder": "请输入手机号",
-      "submit": "留个电话，稍后联系",
+      "submit": "提交需求",
       "registerLink": "想先自己试？免费注册 →"
     }
   },
@@ -866,5 +870,177 @@
     "shareTemplate": "🚀 推荐一个超划算的 AI API 平台 — OptRouter\n\n✅ 完全兼容 OpenAI API，30秒接入\n✅ 智能路由，调用成本降低37%\n✅ 注册即可使用，充值还能给我赚 ¥20 奖励\n\n👉 注册链接：{url}\n{inviteCode}",
     "shareTemplateInviteCode": "📎 邀请码：{code}",
     "wechatTemplate": "推荐一个超划算的AI API平台 OptRouter，完全兼容OpenAI API，智能路由省37%成本。注册链接：{url}"
+  },
+  "docsSite": {
+    "header": {
+      "docs": "文档",
+      "apiReference": "API 参考",
+      "console": "返回控制台",
+      "consoleLogin": "控制台"
+    },
+    "onThisPage": "本页内容",
+    "copy": "复制",
+    "openMenu": "打开目录",
+    "closeMenu": "关闭目录",
+    "sidebarLabel": "文档目录",
+    "nav": {
+      "gettingStarted": "开始使用",
+      "introduction": "产品介绍",
+      "quickstart": "快速开始",
+      "apiKey": "获取 API Key",
+      "authentication": "Base URL 与鉴权",
+      "openaiSdk": "OpenAI SDK 迁移",
+      "api": "API 接口",
+      "chatCompletions": "Chat Completions",
+      "models": "获取模型列表",
+      "smartRoutingModels": "智能路由模型名",
+      "streaming": "流式输出",
+      "requestParams": "请求参数",
+      "response": "返回结果",
+      "gateway": "网关能力",
+      "smartRouting": "智能路由",
+      "failover": "自动故障转移",
+      "logsHeaders": "请求日志与响应 Header",
+      "troubleshooting": "问题排查",
+      "errors": "错误代码",
+      "insufficientBalance": "余额不足",
+      "rateLimits": "限流与重试",
+      "faq": "常见问题"
+    },
+    "pages": {
+      "introduction": {
+        "title": "产品介绍",
+        "description": "OptRouter 是 OpenAI 兼容的 AI API 网关，统一接入主流大模型。",
+        "hWhat": "OptRouter 是什么",
+        "pWhat": "通过单一 Base URL 调用 Claude、Gemini、DeepSeek、OpenAI 等模型，并提供智能路由与自动容灾。",
+        "b0": "兼容 OpenAI SDK：改 baseURL 即可迁移",
+        "b1": "统一鉴权、用量与费用明细",
+        "b2": "上游异常时自动故障转移",
+        "hWho": "适合谁",
+        "pWho": "需要快速接入多模型、降低运维复杂度的产品与工程团队。",
+        "hNext": "下一步",
+        "linkQuickstart": "阅读快速开始 →"
+      },
+      "quickstart": {
+        "title": "快速开始",
+        "description": "注册、创建 API Key、设置 Base URL 后即可发起第一次调用。",
+        "hBaseUrl": "Base URL",
+        "pBaseUrl": "所有 OpenAI 兼容请求使用以下地址：",
+        "hSteps": "三步接入",
+        "s0": "免费注册账号：",
+        "s1": "在控制台创建 API Key：",
+        "s2": "充值额度后，用 Base URL + API Key 调用接口。",
+        "ctaCreateKey": "前往控制台创建 API Key",
+        "linkApiKeyDoc": "查看 API Key 说明 →",
+        "hCurl": "cURL 示例",
+        "hSdk": "SDK 示例"
+      },
+      "api-key": {
+        "title": "获取 API Key",
+        "description": "API Key 由你在控制台自行创建，不会自动分配。",
+        "hCreate": "如何创建",
+        "pCreate": "注册并登录后，打开控制台「API 密钥」页面创建。创建后请立即复制保存。",
+        "ctaRegister": "免费注册",
+        "ctaLogin": "登录控制台",
+        "hFormat": "格式",
+        "hSecurity": "安全建议",
+        "pSecurity": "不要把 Key 提交到公开仓库。推荐使用环境变量 OPTROUTER_API_KEY。"
+      },
+      "authentication": {
+        "title": "Base URL 与鉴权",
+        "description": "所有受保护接口需携带 Bearer Token。",
+        "hBase": "Base URL",
+        "pBase": "生产环境网关地址：",
+        "hHeader": "Authorization"
+      },
+      "openai-sdk": {
+        "title": "OpenAI SDK 迁移",
+        "description": "只需改 baseURL 与 api_key，业务代码几乎不用动。",
+        "hChange": "需要改什么",
+        "pChange": "把官方 OpenAI 客户端的地址与密钥指向 OptRouter：",
+        "keyHint": "控制台创建的 sk- 开头密钥"
+      },
+      "chat-completions": {
+        "title": "Chat Completions",
+        "description": "核心对话补全接口，兼容 OpenAI Chat Completions。",
+        "hEndpoint": "端点",
+        "hExample": "请求示例",
+        "hParams": "参数",
+        "seeAlso": "完整字段说明见"
+      },
+      "models": {
+        "title": "获取模型列表",
+        "description": "查询当前可用模型；单价查询接口仅作技术说明。",
+        "hList": "列出模型",
+        "hPricing": "查询单价（技术）",
+        "pPricing": "通过模型 ID 查询输入和输出 Token 单价，实际价格以接口返回结果为准。"
+      },
+      "smart-routing-models": {
+        "title": "智能路由模型名",
+        "description": "使用虚拟档位名让网关自动选择模型。",
+        "hTiers": "档位一览",
+        "hStrategy": "策略头"
+      },
+      "streaming": {
+        "title": "流式输出",
+        "description": "设置 stream=true 以 SSE 接收增量内容。",
+        "hEnable": "开启流式",
+        "hExample": "示例"
+      },
+      "request-params": {
+        "title": "请求参数",
+        "description": "Chat Completions 主要字段说明。",
+        "hFields": "字段表"
+      },
+      "response": {
+        "title": "返回结果",
+        "description": "非流式成功响应与相关 Header。",
+        "hSuccess": "成功响应",
+        "hHeaders": "响应头"
+      },
+      "smart-routing": {
+        "title": "智能路由",
+        "description": "按延迟、成本与可用性选择更合适的上游模型。",
+        "hHow": "工作原理",
+        "pHow": "网关根据可用性、延迟与成本选择模型；也可使用虚拟档位名委托选择。",
+        "hUsage": "如何使用",
+        "pUsage": "详见"
+      },
+      "failover": {
+        "title": "自动故障转移",
+        "description": "上游异常时自动切换，保障调用连续性。",
+        "hWhat": "是什么",
+        "pWhat": "当当前上游返回错误或超时，网关可切换到备用模型/供应商。",
+        "hBehavior": "使用建议",
+        "pBehavior": "业务侧仍建议对 429/502 做有限次重试；故障转移无法覆盖余额不足等情况。"
+      },
+      "logs-headers": {
+        "title": "请求日志与响应 Header",
+        "description": "用请求 ID 与响应头排障、核对费用。",
+        "hLogs": "控制台日志",
+        "pLogs": "登录控制台可在用量分析中按请求 ID 查看调用记录，与 X-Request-Id 对应。"
+      },
+      "errors": {
+        "title": "错误代码",
+        "description": "OpenAI 兼容错误格式与常见 HTTP 状态。"
+      },
+      "insufficient-balance": {
+        "title": "余额不足",
+        "description": "HTTP 402 表示账户余额不足。",
+        "hSymptom": "现象",
+        "hFix": "处理",
+        "cta": "登录控制台充值 →"
+      },
+      "rate-limits": {
+        "title": "限流与重试",
+        "description": "HTTP 429 时的退避与重试建议。",
+        "hSymptom": "现象",
+        "hRetry": "重试建议"
+      },
+      "faq": {
+        "title": "常见问题",
+        "description": "接入与兼容相关的高频问题。"
+      }
+    }
   }
 }

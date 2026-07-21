@@ -2,6 +2,8 @@
   "common": {
     "siteName": "OptRouter",
     "start": "始める",
+    "login": "ログイン",
+    "register": "無料登録",
     "menu": "メニュー",
     "copied": "コピーしました",
     "copyCurl": "curl サンプルコマンドをコピー",
@@ -9,9 +11,10 @@
   },
   "nav": {
     "solutions": "ソリューション",
-    "enterpriseNav": "エンタープライズ",
-    "features": "機能",
-    "integration": "連携",
+    "enterpriseNav": "企業向け",
+    "features": "コア機能",
+    "integration": "導入開始",
+    "docs": "API ドキュメント",
     "testimonials": "お客様の声",
     "faq": "FAQ",
     "news": "お知らせ",
@@ -19,18 +22,18 @@
   },
   "hero": {
     "ariaLabel": "製品概要",
-    "badge": "本番向け · 統合ルーティング",
+    "badge": "OpenAI SDK 互換",
     "headline1": "1つの API で世界の主流 LLM に接続",
-    "headline2": "より低コスト、高い安定性、より少ない導入負担",
-    "subtitle": "OpenAI 互換 API で Claude・Gemini・DeepSeek などに統一接続。スマートルートと自動フェイルオーバーで接続の複雑さを抑え、チームはプロダクトに集中できます。",
-    "ctaPrimary": "無料で始める",
+    "headline2": "Claude・Gemini・DeepSeek・OpenAI に対応",
+    "subtitle": "OpenAI 互換 API で主流モデルに統一接続。スマートルートと自動フェイルオーバーで、導入と運用コストを抑えます。",
+    "ctaPrimary": "無料登録",
     "ctaDemo": "デモ予約",
-    "linkDocs": "API 概要",
-    "linkEnterprise": "企業向けに相談",
-    "tagline": "ストリーミング・関数呼び出し・マルチモデル切替。迅速な開発から、企業向けのデプロイと統治まで。",
-    "trustLabel": "主要AIフレームワークに対応",
+    "linkDocs": "導入開始",
+    "linkEnterprise": "企業向けを見る",
+    "tagline": "登録後に API キーを作成して呼び出しを開始。",
+    "trustLabel": "対応モデル",
     "pill0": "約30秒で接続",
-    "pill1": "OpenAI 互換",
+    "pill1": "OpenAI SDK 互換",
     "pill2": "スマートルート · 自動フェイルオーバー",
     "snapshotTitle": "ルーティング状況",
     "snapshotLive": "LIVE",
@@ -45,14 +48,14 @@
     "themeToggle": "ダーク/ライトモード切替"
   },
   "features": {
-    "title": "なぜ OptRouter",
-    "subtitle": "AIモデルへの統一入口。接続・切替・請求・安定性の火消しではなく、チームはプロダクトに集中できます。",
-    "item0Title": "スマートルーティング",
-    "item0Desc": "レイテンシ・コスト・性能・可用性からより適したモデルを自動選択。フォールバック対応。",
-    "item1Title": "OpenAI 互換",
-    "item1Desc": "OpenAI API 形式に完全対応。慣れた SDK と呼び出し方のまま、移行コストを抑えられます。",
-    "item2Title": "統一インターフェース",
-    "item2Desc": "複数の主流ベンダーへ 1 つの API。重複したアダプタと運用を減らします。",
+    "title": "3つのコア機能",
+    "subtitle": "接続・安定性・コスト管理を一つの入口に。",
+    "item0Title": "1つの API で複数モデル",
+    "item0Desc": "OpenAI SDK 互換。Claude・Gemini・DeepSeek・OpenAI などを統一呼び出し、複数接続の保守を不要に。",
+    "item1Title": "スマートルートと自動フェイルオーバー",
+    "item1Desc": "遅延・コスト・可用性に応じて適したモデルを選択。上流障害時は自動切替で継続。",
+    "item2Title": "統一請求と利用量管理",
+    "item2Desc": "コンソールで残高・呼び出し量・費用を確認し、AI 支出を可視化。",
     "item3Title": "高性能ゲートウェイ",
     "item3Desc": "ストリーミング・高並列・低遅延。実運用のワークロード向け。",
     "item4Title": "統一請求",
@@ -111,29 +114,29 @@
     "card3Title": "プライベート／カスタムが必要な顧客",
     "card3Desc": "ゲートウェイのカスタム、プロバイダ追加、企業向け統制を求める。"
   },
-  "enterprise": {
-    "title": "本番で大事なのは「呼べる」だけでなく「管理できる」こと",
-    "subtitle": "権限・コスト・監査の土台で、スケールする運用へ。",
-    "item0Title": "統合された権限管理",
-    "item0Desc": "APIキー、チーム権限、呼び出し境界の制御。",
-    "item1Title": "利用量とコスト分析",
-    "item1Desc": "モデル別の呼び出し量・費用・トレンドを可視化。",
-    "item2Title": "ルーティングポリシー",
-    "item2Desc": "コスト優先・速度優先・安定性優先など柔軟に調整。",
-    "item3Title": "監査と運用支援",
-    "item3Desc": "ログ、アラート、トレース、障害切り分けを容易に。"
+  "consolePreview": {
+    "title": "ログイン後、呼び出し状況を一画面で",
+    "subtitle": "残高、API キー、呼び出し量、成功率、遅延、ログをコンソールでまとめて管理。",
+    "consoleAria": "ログイン後コンソールのプレビュー：残高、APIキー、利用量、成功率、遅延",
+    "consoleWindowTitle": "OptRouter コンソール",
+    "consoleBalance": "残高",
+    "consoleKeys": "API キー管理",
+    "consoleUsage": "利用量と費用",
+    "consoleHealth": "成功率・遅延・ログ",
+    "consoleNote": "コンソール機能プレビュー",
+    "loginHint": "ログインしてコンソールを見る →"
   },
   "faq": {
     "title": "よくある質問",
-    "subtitle": "OptRouter に関するよくある質問",
-    "q0": "OptRouter と OpenAI API を直接使う違いは？",
-    "a0": "OptRouter は OpenAI API 形式に完全互換で、baseURL を変えるだけで切り替え可能。さらにスマートルーティング、自動フォールバック、統一請求・利用統計でコスト削減と安定性向上を実現。",
-    "q1": "対応しているAIモデルは？",
-    "a1": "OpenAI（GPT-4o、GPT-4 Turbo等）、Anthropic（Claude 3.5 Sonnet等）、Google（Gemini Pro）、DeepSeek、Qwenなど。随時追加しています。",
-    "q2": "使い方は？",
-    "a2": "登録後、APIキーが発行されます。コードの baseURL を OptRouter のエンドポイントに差し替えるだけで利用開始、30秒以内。",
-    "q3": "料金体系は？",
-    "a3": "従量課金（人民元建て）でモデルごとに料金が異なります。ダッシュボードで利用量・費用を確認。登録で無料枠あり、クレジットカード不要。",
+    "subtitle": "よく聞かれる4つの質問",
+    "q0": "対応モデルは？",
+    "a0": "OpenAI、Anthropic Claude、Google Gemini、DeepSeek、Qwen など主流モデルに対応し、随時追加しています。",
+    "q1": "料金体系は？",
+    "a1": "従量課金（人民元建て）でモデルごとに料金が異なります。コンソールで利用量・費用を確認。登録で無料枠あり、クレジットカード不要。",
+    "q2": "OpenAI SDK と互換ですか？",
+    "a2": "完全互換です。baseURL を https://api.optrouter.com/v1 に変更し、コンソールで作成した API キーを使ってください。",
+    "q3": "API キーはどう作成しますか？",
+    "a3": "登録・ログイン後、コンソールでご自身で API キーを作成します。自動発行ではありません。作成後にチャージして呼び出しを開始できます。",
     "q4": "データの安全性は？",
     "a4": "会話内容は保存しません。リクエストは暗号化経路で上流へ転送。APIキーはハッシュ保存、企業向け権限管理・データ分離に対応。",
     "q5": "スマートルーティングの仕組みは？",
@@ -153,10 +156,10 @@
   },
   "cta": {
     "title": "始める準備はできましたか？",
-    "subtitle": "無料登録で人民元（¥）5 相当のクレジット。クレジットカード不要、いつでも解約可。検証から本番まで同じ入口から。",
-    "buttonStart": "無料で始める",
-    "buttonDocs": "ドキュメントを見る",
-    "enterpriseHint": "エンタープライズの方は要件を送信し、ソリューション・見積りをご相談ください。"
+    "subtitle": "無料登録して API キーを作成し、主流 LLM を呼び出し。クレジットカード不要。",
+    "buttonStart": "無料登録",
+    "buttonDocs": "導入例を見る",
+    "enterpriseHint": "プライベート導入・企業権限・カスタムルーティングが必要ですか？企業向けを見る"
   },
   "contact": {
     "title": "お問い合わせ：導入提案・評価・見積りサポート",
@@ -178,11 +181,17 @@
     "errorNetwork": "ネットワークエラー。しばらくしてからお試しください。"
   },
   "codeExample": {
-    "title": "数分で統合",
-    "sampleHint": "慣れた呼び出し方のまま、まず baseURL を変えて接続し、あとから最適化。",
-    "subtitle": "OpenAI API 形式に完全対応。baseURL を OptRouter に変更するだけ。OpenAI SDK、LangChain、LlamaIndex など、デモから本番まで。",
+    "title": "3ステップで呼び出し開始",
+    "sampleHint": "OpenAI SDK 互換：baseURL を変え、環境変数の API キーを使用。",
+    "subtitle": "登録、キー作成、チャージ後に呼び出し。右側はコピー可能なサンプルコードです。",
     "subtitleNote": "例は示意用URL。ローカルでは",
     "subtitleNoteEnd": " を使用し、本番ではゲートウェイURLに差し替えてください。",
+    "step0Title": "登録・ログイン",
+    "step0Desc": "無料で OptRouter に登録し、コンソールへ。",
+    "step1Title": "API キーを作成",
+    "step1Desc": "コンソールでご自身の API キーを作成し、安全に保管。",
+    "step2Title": "チャージして呼び出し",
+    "step2Desc": "残高を追加し、baseURL を OptRouter に向けて呼び出し開始。",
     "bullet0": "OpenAI API 完全互換",
     "bullet1": "ストリーミング・関数呼び出し対応",
     "bullet2": "スマートルーティングと自動フォールバック",
@@ -190,7 +199,9 @@
     "tabJs": "JavaScript",
     "tabPy": "Python",
     "tabCurl": "cURL",
-    "copy": "コピー"
+    "copy": "コピー",
+    "baseUrlLabel": "Base URL",
+    "copyBaseUrl": "Base URL をコピー"
   },
   "testimonials": {
     "title": "ユーザーは OptRouter をどう評価するか",
@@ -228,7 +239,7 @@
   },
   "home": {
     "title": "OptRouter - 1つの API で世界の主流 LLM に",
-    "description": "OpenAI API 互換。OpenAI・Claude・Gemini・DeepSeek などへ統一接続。スマートルーティングとフェイルオーバーで、低コスト・高安定・低負担。"
+    "description": "OpenAI SDK 互換。OpenAI・Claude・Gemini・DeepSeek などへ統一接続。スマートルート、自動フェイルオーバー、統一請求。無料登録後、ご自身で API キーを作成して利用開始。"
   },
   "wxPoster": {
     "ctaAddWechat": "WeChatで追加",
@@ -251,7 +262,7 @@
       "point2": "呼び出しコストを最適化",
       "trust": "AI 製品・SaaS・スタートアップ・企業 AI チーム向け",
       "primaryCta": "無料で試す",
-      "secondaryCta": "WeChat"
+      "secondaryCta": "企業要件を送信"
     },
     "why": {
       "title": "こんな課題はありませんか",
@@ -289,18 +300,11 @@
       "item2": "スタートアップ",
       "item3": "企業 AI チーム"
     },
-    "wechat": {
-      "title": "WeChat で接続方案を取得",
-      "qrAlt": "WeChat QR",
-      "qrPlaceholder": "QR の読み込みに失敗",
-      "caption": "長押しでスキャン"
-    },
     "convert": {
-      "title": "お問い合わせ",
-      "subtitle": "まず WeChat でアドバイザーを追加。電話番号でも折り返し連絡します。",
-      "or": "または電話番号",
+      "title": "企業要件を送信",
+      "subtitle": "連絡先を残していただければ、導入方案をご相談します。先に無料トライアルも可能です。",
       "phonePlaceholder": "携帯番号を入力",
-      "submit": "電話を残す、後ほど連絡",
+      "submit": "要件を送信",
       "registerLink": "先に試す？無料登録 →"
     }
   },
@@ -851,5 +855,177 @@
     "shareTemplate": "🚀 お得な AI API プラットフォーム OptRouter のご紹介\n\n✅ OpenAI API 完全互換、30秒で接続\n✅ スマートルーティングでコスト約37%削減\n✅ 登録して利用、チャージで紹介者に ¥20 報酬\n\n👉 登録リンク：{url}\n{inviteCode}",
     "shareTemplateInviteCode": "📎 招待コード：{code}",
     "wechatTemplate": "OptRouter：OpenAI互換AI API、スマートルーティングで約37%コスト削減。登録：{url}"
+  },
+  "docsSite": {
+    "header": {
+      "docs": "ドキュメント",
+      "apiReference": "API リファレンス",
+      "console": "コンソールへ",
+      "consoleLogin": "コンソール"
+    },
+    "onThisPage": "このページの内容",
+    "copy": "コピー",
+    "openMenu": "メニューを開く",
+    "closeMenu": "メニューを閉じる",
+    "sidebarLabel": "ドキュメント目次",
+    "nav": {
+      "gettingStarted": "はじめる",
+      "introduction": "製品紹介",
+      "quickstart": "クイックスタート",
+      "apiKey": "API キーの取得",
+      "authentication": "Base URL と認証",
+      "openaiSdk": "OpenAI SDK 移行",
+      "api": "API リファレンス",
+      "chatCompletions": "Chat Completions",
+      "models": "モデル一覧",
+      "smartRoutingModels": "スマートルーティングモデル名",
+      "streaming": "ストリーミング",
+      "requestParams": "リクエストパラメータ",
+      "response": "レスポンス",
+      "gateway": "ゲートウェイ機能",
+      "smartRouting": "スマートルーティング",
+      "failover": "自動フェイルオーバー",
+      "logsHeaders": "ログとレスポンスヘッダー",
+      "troubleshooting": "トラブルシューティング",
+      "errors": "エラーコード",
+      "insufficientBalance": "残高不足",
+      "rateLimits": "レート制限とリトライ",
+      "faq": "よくある質問"
+    },
+    "pages": {
+      "introduction": {
+        "title": "製品紹介",
+        "description": "OptRouter は OpenAI 互換の AI API ゲートウェイです。",
+        "hWhat": "OptRouter とは",
+        "pWhat": "一つの Base URL で Claude、Gemini、DeepSeek、OpenAI などを呼び出し、スマートルーティングとフェイルオーバーを提供します。",
+        "b0": "OpenAI SDK 互換：baseURL を変更するだけ",
+        "b1": "認証・利用量・費用を一元管理",
+        "b2": "上流障害時の自動フェイルオーバー",
+        "hWho": "対象",
+        "pWho": "マルチモデル接入を素早く行い、運用負荷を下げたいチーム向け。",
+        "hNext": "次のステップ",
+        "linkQuickstart": "クイックスタートを読む →"
+      },
+      "quickstart": {
+        "title": "クイックスタート",
+        "description": "登録、API キー作成、Base URL 設定後に最初の呼び出し。",
+        "hBaseUrl": "Base URL",
+        "pBaseUrl": "OpenAI 互換リクエストは次のアドレスを使用します：",
+        "hSteps": "3ステップ",
+        "s0": "無料登録：",
+        "s1": "コンソールで API キーを作成：",
+        "s2": "チャージ後、Base URL + API キーで呼び出し。",
+        "ctaCreateKey": "コンソールで API キーを作成",
+        "linkApiKeyDoc": "API キーの説明を見る →",
+        "hCurl": "cURL 例",
+        "hSdk": "SDK 例"
+      },
+      "api-key": {
+        "title": "API キーの取得",
+        "description": "キーはコンソールで自分で作成します（自動発行なし）。",
+        "hCreate": "作成方法",
+        "pCreate": "登録・ログイン後、「API キー」で作成し、すぐコピーして保管してください。",
+        "ctaRegister": "無料登録",
+        "ctaLogin": "コンソールにログイン",
+        "hFormat": "形式",
+        "hSecurity": "セキュリティ",
+        "pSecurity": "公開リポジトリにキーを置かないでください。環境変数 OPTROUTER_API_KEY を推奨。"
+      },
+      "authentication": {
+        "title": "Base URL と認証",
+        "description": "保護された API には Bearer トークンが必要です。",
+        "hBase": "Base URL",
+        "pBase": "本番ゲートウェイ：",
+        "hHeader": "Authorization"
+      },
+      "openai-sdk": {
+        "title": "OpenAI SDK 移行",
+        "description": "baseURL と api_key を変えるだけで、ほぼそのまま使えます。",
+        "hChange": "変更点",
+        "pChange": "公式 OpenAI クライアントを OptRouter に向けます：",
+        "keyHint": "コンソールで作成した sk- キー"
+      },
+      "chat-completions": {
+        "title": "Chat Completions",
+        "description": "OpenAI Chat Completions 互換の中核エンドポイント。",
+        "hEndpoint": "エンドポイント",
+        "hExample": "例",
+        "hParams": "パラメータ",
+        "seeAlso": "詳細は"
+      },
+      "models": {
+        "title": "モデル一覧",
+        "description": "利用可能モデルの取得。単価 API は技術説明のみ。",
+        "hList": "モデル一覧",
+        "hPricing": "単価照会（技術）",
+        "pPricing": "モデル ID で入力・出力トークン単価を照会します。実際の価格は API の返却値に従います。"
+      },
+      "smart-routing-models": {
+        "title": "スマートルーティングモデル名",
+        "description": "仮想ティア名でゲートウェイにモデル選択を任せます。",
+        "hTiers": "ティア一覧",
+        "hStrategy": "戦略ヘッダー"
+      },
+      "streaming": {
+        "title": "ストリーミング",
+        "description": "stream=true で SSE の増分を受信。",
+        "hEnable": "有効化",
+        "hExample": "例"
+      },
+      "request-params": {
+        "title": "リクエストパラメータ",
+        "description": "Chat Completions の主なフィールド。",
+        "hFields": "フィールド"
+      },
+      "response": {
+        "title": "レスポンス",
+        "description": "非ストリーム成功レスポンスとヘッダー。",
+        "hSuccess": "成功レスポンス",
+        "hHeaders": "ヘッダー"
+      },
+      "smart-routing": {
+        "title": "スマートルーティング",
+        "description": "遅延・コスト・可用性に基づき上流を選択。",
+        "hHow": "仕組み",
+        "pHow": "ゲートウェイが可用性・遅延・コストでモデルを選ぶか、仮想ティア名で委譲します。",
+        "hUsage": "使い方",
+        "pUsage": "詳細は"
+      },
+      "failover": {
+        "title": "自動フェイルオーバー",
+        "description": "上流障害時に切り替え、呼び出しを継続。",
+        "hWhat": "概要",
+        "pWhat": "上流エラーやタイムアウト時、バックアップモデル/プロバイダへ切り替え可能です。",
+        "hBehavior": "推奨",
+        "pBehavior": "クライアント側でも 429/502 はバックオフ再試行を。残高不足はフェイルオーバー対象外です。"
+      },
+      "logs-headers": {
+        "title": "ログとレスポンスヘッダー",
+        "description": "リクエスト ID とヘッダーで調査・費用確認。",
+        "hLogs": "コンソールログ",
+        "pLogs": "利用分析で X-Request-Id と一致するリクエスト ID を検索できます。"
+      },
+      "errors": {
+        "title": "エラーコード",
+        "description": "OpenAI 互換のエラー形式と主な HTTP ステータス。"
+      },
+      "insufficient-balance": {
+        "title": "残高不足",
+        "description": "HTTP 402 は残高不足を示します。",
+        "hSymptom": "症状",
+        "hFix": "対処",
+        "cta": "ログインしてチャージ →"
+      },
+      "rate-limits": {
+        "title": "レート制限とリトライ",
+        "description": "HTTP 429 のバックオフ推奨。",
+        "hSymptom": "症状",
+        "hRetry": "リトライ"
+      },
+      "faq": {
+        "title": "よくある質問",
+        "description": "接入・互換に関するよくある質問。"
+      }
+    }
   }
 }

@@ -109,7 +109,7 @@ export function QuickStart() {
         </Tabs>
         <p className="text-xs text-muted-foreground mt-4">
           {t("dashboard.quickStartMore")}{" "}
-          <LocaleLink href="/docs" className="text-primary hover:underline">
+          <LocaleLink href="/docs/quickstart" className="text-primary hover:underline">
             {t("dashboard.viewDocs")}
           </LocaleLink>
           {" · "}

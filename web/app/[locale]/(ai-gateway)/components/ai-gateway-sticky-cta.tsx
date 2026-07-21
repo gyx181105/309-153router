@@ -22,7 +22,7 @@ export function AiGatewayStickyCta() {
     >
       <div className="mx-auto flex max-w-lg gap-3">
         <Button variant="outline" className="h-11 flex-1 text-sm" asChild>
-          <a href="#wechat">{t("aiGateway.hero.secondaryCta")}</a>
+          <a href="#contact">{t("aiGateway.hero.secondaryCta")}</a>
         </Button>
         <LocaleLink href={registerHref} className="flex-[1.2]">
           <Button className="ds-btn-primary h-11 w-full text-sm font-semibold">

@@ -18,7 +18,7 @@ export function TopBar() {
           className="h-8 gap-1.5 px-3 text-xs text-muted-foreground hover:text-foreground hover:bg-muted/40 focus-visible:bg-muted/40 focus-visible:text-foreground active:bg-muted/30 active:text-foreground"
           asChild
         >
-          <LocaleLink href="/docs">
+          <LocaleLink href="/docs/quickstart">
             <ExternalLink className="size-3.5" />
             <span className="hidden sm:inline">{t("dashboard.apiDocs")}</span>
           </LocaleLink>

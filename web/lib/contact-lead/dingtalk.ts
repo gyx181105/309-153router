@@ -108,7 +108,7 @@ async function postToWebhook(payload: DingTalkTextMessage | DingTalkMarkdownMess
 }
 
 const FORM_LABELS: Record<string, string> = {
-  ai_gateway_contact: "朋友圈着陆页",
+  ai_gateway_contact: "企业需求表单",
   home_contact: "官网联系表单",
 }
 

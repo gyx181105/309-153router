@@ -2,6 +2,8 @@
   "common": {
     "siteName": "OptRouter",
     "start": "Get Started",
+    "login": "Log in",
+    "register": "Sign up free",
     "menu": "Menu",
     "copied": "Copied",
     "copyCurl": "Copy curl example command",
@@ -10,8 +12,9 @@
   "nav": {
     "solutions": "Solutions",
     "enterpriseNav": "Enterprise",
-    "features": "Features",
-    "integration": "Integration",
+    "features": "Capabilities",
+    "integration": "Get started",
+    "docs": "API docs",
     "testimonials": "Testimonials",
     "faq": "FAQ",
     "news": "News",
@@ -19,18 +22,18 @@
   },
   "hero": {
     "ariaLabel": "Product overview",
-    "badge": "Production · Unified routing",
+    "badge": "OpenAI SDK compatible",
     "headline1": "One API for mainstream global LLMs",
-    "headline2": "Lower cost, higher reliability, less integration burden",
-    "subtitle": "Use one OpenAI-compatible API for Claude, Gemini, DeepSeek, and more. Smart routing and automatic failover cut integration complexity so your team can focus on the product.",
-    "ctaPrimary": "Start for free",
+    "headline2": "Claude, Gemini, DeepSeek, and OpenAI",
+    "subtitle": "Use one OpenAI-compatible API for major models. Smart routing and automatic failover help teams cut integration and ops cost.",
+    "ctaPrimary": "Sign up free",
     "ctaDemo": "Book a demo",
-    "linkDocs": "API overview",
-    "linkEnterprise": "Talk to sales",
-    "tagline": "Streaming, tool calls, and hot-swapping models—fast iteration today, enterprise deployment and governance when you need it.",
-    "trustLabel": "Compatible with all major AI frameworks",
+    "linkDocs": "Get started",
+    "linkEnterprise": "Enterprise options",
+    "tagline": "Create an API key after signup, then start calling.",
+    "trustLabel": "Supported models",
     "pill0": "~30s to integrate",
-    "pill1": "OpenAI compatible",
+    "pill1": "OpenAI SDK compatible",
     "pill2": "Smart routing · Auto failover",
     "snapshotTitle": "Live routing snapshot",
     "snapshotLive": "LIVE",
@@ -45,14 +48,14 @@
     "themeToggle": "Toggle dark/light mode"
   },
   "features": {
-    "title": "Why OptRouter",
-    "subtitle": "The unified entry for AI models—so your team focuses on the product, not wiring, switching, billing, and reliability fires.",
-    "item0Title": "Smart routing",
-    "item0Desc": "Automatically pick a better-fit model by latency, cost, performance, and availability—with fallback.",
-    "item1Title": "OpenAI compatible",
-    "item1Desc": "Fully OpenAI API compatible—keep your SDKs and calling patterns; lower migration cost.",
-    "item2Title": "Unified API",
-    "item2Desc": "One API across major model vendors—less duplicate integration and long-term maintenance.",
+    "title": "Three core capabilities",
+    "subtitle": "One entry for access, reliability, and cost control.",
+    "item0Title": "One API for many models",
+    "item0Desc": "OpenAI SDK compatible—call Claude, Gemini, DeepSeek, OpenAI and more without maintaining multiple integrations.",
+    "item1Title": "Smart routing & auto failover",
+    "item1Desc": "Pick a better-fit model by latency, cost, and availability; fail over automatically when upstream degrades.",
+    "item2Title": "Unified billing & usage",
+    "item2Desc": "See balance, usage, and spend in the console—make AI cost visible and controllable.",
     "item3Title": "High-performance gateway",
     "item3Desc": "Streaming, high concurrency, and low-latency calls—built for real production workloads.",
     "item4Title": "Unified billing",
@@ -111,29 +114,29 @@
     "card3Title": "Private / custom deployments",
     "card3Desc": "Gateway customization, provider onboarding, and enterprise-grade controls."
   },
-  "enterprise": {
-    "title": "Production isn’t only “can we call a model”—it’s “can we govern it”",
-    "subtitle": "Permissions, cost, and audit foundations for scaled operations.",
-    "item0Title": "Unified access control",
-    "item0Desc": "API keys, team permissions, and safe call boundaries.",
-    "item1Title": "Usage & cost analytics",
-    "item1Desc": "See spend and trends per model—plan with data, not guesses.",
-    "item2Title": "Routing policy",
-    "item2Desc": "Optimize for cost, latency, or stability—policy-driven, not tribal knowledge.",
-    "item3Title": "Audit & operations",
-    "item3Desc": "Logs, alerts, tracing, and faster incident diagnosis."
+  "consolePreview": {
+    "title": "See your traffic in one console",
+    "subtitle": "After login, manage balance, API keys, usage, success rate, latency, and logs in one place.",
+    "consoleAria": "Logged-in console preview: balance, API keys, usage, success rate, and latency",
+    "consoleWindowTitle": "OptRouter Console",
+    "consoleBalance": "Account balance",
+    "consoleKeys": "API key management",
+    "consoleUsage": "Usage and spend",
+    "consoleHealth": "Success rate, latency, and logs",
+    "consoleNote": "Console preview",
+    "loginHint": "Sign in to view console →"
   },
   "faq": {
     "title": "FAQ",
-    "subtitle": "Frequently asked questions about OptRouter",
-    "q0": "How is OptRouter different from calling OpenAI directly?",
-    "a0": "OptRouter is fully OpenAI API compatible—just change baseURL. On top of that you get smart routing, auto fallback, unified billing and usage stats to cut cost and improve reliability.",
-    "q1": "Which AI models are supported?",
-    "a1": "OpenAI (GPT-4o, GPT-4 Turbo, etc.), Anthropic (Claude 3.5 Sonnet, etc.), Google (Gemini Pro), DeepSeek, Qwen and more. We keep adding providers and models.",
-    "q2": "How do I get started?",
-    "a2": "After signup you get an API key. Replace baseURL in your code with OptRouter’s endpoint and you’re done—under 30 seconds.",
-    "q3": "How does billing work?",
-    "a3": "Pay per use in CNY; prices vary by model. View usage and costs in the dashboard. Free credits on signup (RMB), no credit card required.",
+    "subtitle": "Four questions teams ask most",
+    "q0": "Which models are supported?",
+    "a0": "OpenAI, Anthropic Claude, Google Gemini, DeepSeek, Qwen, and more—we keep adding providers.",
+    "q1": "How does billing work?",
+    "a1": "Pay per use (CNY); prices vary by model. Check usage and costs in the console. Free credits on signup, no credit card required.",
+    "q2": "Is it compatible with the OpenAI SDK?",
+    "a2": "Yes. Set baseURL to https://api.optrouter.com/v1 and use an API key you create in the console.",
+    "q3": "How do I create an API key?",
+    "a3": "After you register and sign in, create an API key in the console. Keys are not auto-assigned—create one, top up, then call the API.",
     "q4": "Is my data safe?",
     "a4": "We don’t store your conversations; requests are forwarded over encrypted channels. API keys are hashed; we support enterprise access control and data isolation.",
     "q5": "How does smart routing work?",
@@ -153,10 +156,10 @@
   },
   "cta": {
     "title": "Ready to get started?",
-    "subtitle": "Sign up free and get ¥5 credit (CNY). No credit card. Cancel anytime. Same entry path from quick validation to production.",
-    "buttonStart": "Start for free",
-    "buttonDocs": "View docs",
-    "enterpriseHint": "Enterprise? Submit requirements for solutions and pricing."
+    "subtitle": "Sign up free, create an API key, and call major LLMs. No credit card required.",
+    "buttonStart": "Sign up free",
+    "buttonDocs": "View integration",
+    "enterpriseHint": "Need private deployment, enterprise access, or custom routing? Learn about enterprise"
   },
   "contact": {
     "title": "Contact us for integration advice, evaluation, and pricing",
@@ -178,11 +181,17 @@
     "errorNetwork": "Network error. Please try again later."
   },
   "codeExample": {
-    "title": "Integrate in minutes",
-    "sampleHint": "Keep your calling patterns—change baseURL first, optimize later.",
-    "subtitle": "Fully OpenAI API compatible—just change baseURL to OptRouter. Works with OpenAI SDK, LangChain, LlamaIndex, from demo to production.",
+    "title": "Start in three steps",
+    "sampleHint": "OpenAI SDK compatible—change baseURL and use your API key from an env var.",
+    "subtitle": "Register, create a key, top up, then call. Copy a ready-to-use sample on the right.",
     "subtitleNote": "Example uses placeholder URL; for local dev use",
     "subtitleNoteEnd": ", replace with your gateway URL in production.",
+    "step0Title": "Sign up and sign in",
+    "step0Desc": "Create a free OptRouter account and open the console.",
+    "step1Title": "Create an API key",
+    "step1Desc": "Create your own API key in the console and keep it safe.",
+    "step2Title": "Top up and call",
+    "step2Desc": "Add credit, point baseURL to OptRouter, and start calling models.",
     "bullet0": "Fully OpenAI API compatible",
     "bullet1": "Streaming and function calling",
     "bullet2": "Smart routing and auto fallback",
@@ -190,7 +199,9 @@
     "tabJs": "JavaScript",
     "tabPy": "Python",
     "tabCurl": "cURL",
-    "copy": "Copy"
+    "copy": "Copy",
+    "baseUrlLabel": "Base URL",
+    "copyBaseUrl": "Copy Base URL"
   },
   "testimonials": {
     "title": "What teams say about OptRouter",
@@ -228,7 +239,7 @@
   },
   "home": {
     "title": "OptRouter - One API for mainstream global LLMs",
-    "description": "OpenAI API compatible; unified access to OpenAI, Claude, Gemini, DeepSeek and more. Smart routing and failover—lower cost, higher reliability, less integration burden."
+    "description": "OpenAI SDK compatible; unified access to OpenAI, Claude, Gemini, DeepSeek and more. Smart routing, auto failover, and unified billing. Sign up free and create your own API key."
   },
   "wxPoster": {
     "ctaAddWechat": "Add on WeChat",
@@ -251,7 +262,7 @@
       "point2": "Optimize call cost",
       "trust": "For AI products, SaaS, startups, and enterprise AI teams",
       "primaryCta": "Try free",
-      "secondaryCta": "WeChat"
+      "secondaryCta": "Submit enterprise request"
     },
     "why": {
       "title": "Sound familiar?",
@@ -289,18 +300,11 @@
       "item2": "Startup teams",
       "item3": "Enterprise AI teams"
     },
-    "wechat": {
-      "title": "Scan WeChat for integration help",
-      "qrAlt": "WeChat QR",
-      "qrPlaceholder": "WeChat QR failed to load",
-      "caption": "Long-press to scan"
-    },
     "convert": {
-      "title": "Contact us",
-      "subtitle": "Scan WeChat to talk to our advisor—or leave your number and we'll reach out soon.",
-      "or": "or your number",
+      "title": "Submit an enterprise request",
+      "subtitle": "Leave your contact details and we'll discuss integration options. Or try free first.",
       "phonePlaceholder": "Your mobile number",
-      "submit": "Leave number, we'll reach out",
+      "submit": "Submit request",
       "registerLink": "Want to try yourself? Register →"
     }
   },
@@ -851,5 +855,177 @@
     "shareTemplate": "🚀 Check out OptRouter — great AI API platform\n\n✅ OpenAI API compatible, 30s to integrate\n✅ Smart routing, ~37% cost savings\n✅ Sign up and use; I earn ¥20 when you top up\n\n👉 Register: {url}\n{inviteCode}",
     "shareTemplateInviteCode": "📎 Invite code: {code}",
     "wechatTemplate": "OptRouter: OpenAI-compatible AI API, smart routing saves ~37%. Register: {url}"
+  },
+  "docsSite": {
+    "header": {
+      "docs": "Docs",
+      "apiReference": "API reference",
+      "console": "Console",
+      "consoleLogin": "Console"
+    },
+    "onThisPage": "On this page",
+    "copy": "Copy",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "sidebarLabel": "Documentation",
+    "nav": {
+      "gettingStarted": "Getting started",
+      "introduction": "Introduction",
+      "quickstart": "Quickstart",
+      "apiKey": "Get an API key",
+      "authentication": "Base URL & auth",
+      "openaiSdk": "OpenAI SDK migration",
+      "api": "API reference",
+      "chatCompletions": "Chat Completions",
+      "models": "List models",
+      "smartRoutingModels": "Smart routing model names",
+      "streaming": "Streaming",
+      "requestParams": "Request parameters",
+      "response": "Response",
+      "gateway": "Gateway features",
+      "smartRouting": "Smart routing",
+      "failover": "Automatic failover",
+      "logsHeaders": "Logs & response headers",
+      "troubleshooting": "Troubleshooting",
+      "errors": "Error codes",
+      "insufficientBalance": "Insufficient balance",
+      "rateLimits": "Rate limits & retries",
+      "faq": "FAQ"
+    },
+    "pages": {
+      "introduction": {
+        "title": "Introduction",
+        "description": "OptRouter is an OpenAI-compatible AI API gateway for mainstream models.",
+        "hWhat": "What is OptRouter",
+        "pWhat": "Call Claude, Gemini, DeepSeek, OpenAI and more through one Base URL, with smart routing and failover.",
+        "b0": "OpenAI SDK compatible—change baseURL to migrate",
+        "b1": "Unified auth, usage, and spend details",
+        "b2": "Automatic failover when upstreams fail",
+        "hWho": "Who it is for",
+        "pWho": "Product and engineering teams that need multi-model access with less ops overhead.",
+        "hNext": "Next",
+        "linkQuickstart": "Read the quickstart →"
+      },
+      "quickstart": {
+        "title": "Quickstart",
+        "description": "Register, create a key, set Base URL, then make your first call.",
+        "hBaseUrl": "Base URL",
+        "pBaseUrl": "Use this address for all OpenAI-compatible requests:",
+        "hSteps": "Three steps",
+        "s0": "Create a free account:",
+        "s1": "Create an API key in the console:",
+        "s2": "Top up, then call the API with Base URL + API key.",
+        "ctaCreateKey": "Create API key in console",
+        "linkApiKeyDoc": "API key guide →",
+        "hCurl": "cURL example",
+        "hSdk": "SDK examples"
+      },
+      "api-key": {
+        "title": "Get an API key",
+        "description": "Keys are created by you in the console—they are not auto-assigned.",
+        "hCreate": "How to create",
+        "pCreate": "After signup, open API Keys in the console and create one. Copy it immediately.",
+        "ctaRegister": "Sign up free",
+        "ctaLogin": "Log in to console",
+        "hFormat": "Format",
+        "hSecurity": "Security",
+        "pSecurity": "Never commit keys to public repos. Prefer the OPTROUTER_API_KEY env var."
+      },
+      "authentication": {
+        "title": "Base URL & auth",
+        "description": "Protected endpoints require a Bearer token.",
+        "hBase": "Base URL",
+        "pBase": "Production gateway:",
+        "hHeader": "Authorization"
+      },
+      "openai-sdk": {
+        "title": "OpenAI SDK migration",
+        "description": "Change baseURL and api_key—most app code stays the same.",
+        "hChange": "What to change",
+        "pChange": "Point the official OpenAI client at OptRouter:",
+        "keyHint": "your sk- key from the console"
+      },
+      "chat-completions": {
+        "title": "Chat Completions",
+        "description": "Core chat endpoint, OpenAI Chat Completions compatible.",
+        "hEndpoint": "Endpoint",
+        "hExample": "Example",
+        "hParams": "Parameters",
+        "seeAlso": "Full field reference:"
+      },
+      "models": {
+        "title": "List models",
+        "description": "List available models; pricing endpoint is documented technically only.",
+        "hList": "List models",
+        "hPricing": "Pricing (technical)",
+        "pPricing": "Query input and output token unit prices by model ID. Actual prices are whatever the API returns."
+      },
+      "smart-routing-models": {
+        "title": "Smart routing model names",
+        "description": "Use virtual tier names and let the gateway pick a model.",
+        "hTiers": "Tiers",
+        "hStrategy": "Strategy header"
+      },
+      "streaming": {
+        "title": "Streaming",
+        "description": "Set stream=true to receive SSE deltas.",
+        "hEnable": "Enable streaming",
+        "hExample": "Example"
+      },
+      "request-params": {
+        "title": "Request parameters",
+        "description": "Main Chat Completions fields.",
+        "hFields": "Fields"
+      },
+      "response": {
+        "title": "Response",
+        "description": "Non-streaming success body and related headers.",
+        "hSuccess": "Success body",
+        "hHeaders": "Headers"
+      },
+      "smart-routing": {
+        "title": "Smart routing",
+        "description": "Pick a better upstream by latency, cost, and availability.",
+        "hHow": "How it works",
+        "pHow": "The gateway selects models by availability, latency, and cost—or via virtual tier names.",
+        "hUsage": "How to use",
+        "pUsage": "See"
+      },
+      "failover": {
+        "title": "Automatic failover",
+        "description": "Switch upstreams on failure to keep calls flowing.",
+        "hWhat": "What it is",
+        "pWhat": "On upstream errors or timeouts, the gateway can switch to a backup model/provider.",
+        "hBehavior": "Guidance",
+        "pBehavior": "Still retry 429/502 with backoff on the client. Failover does not cover insufficient balance."
+      },
+      "logs-headers": {
+        "title": "Logs & response headers",
+        "description": "Use request IDs and headers for debugging and cost checks.",
+        "hLogs": "Console logs",
+        "pLogs": "In analytics, look up calls by request ID matching X-Request-Id."
+      },
+      "errors": {
+        "title": "Error codes",
+        "description": "OpenAI-compatible error shape and common HTTP statuses."
+      },
+      "insufficient-balance": {
+        "title": "Insufficient balance",
+        "description": "HTTP 402 means the account balance is too low.",
+        "hSymptom": "Symptom",
+        "hFix": "Fix",
+        "cta": "Log in and top up →"
+      },
+      "rate-limits": {
+        "title": "Rate limits & retries",
+        "description": "Backoff guidance for HTTP 429.",
+        "hSymptom": "Symptom",
+        "hRetry": "Retry guidance"
+      },
+      "faq": {
+        "title": "FAQ",
+        "description": "Common integration and compatibility questions."
+      }
+    }
   }
 }

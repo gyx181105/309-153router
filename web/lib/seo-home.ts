@@ -17,10 +17,6 @@ type FaqMessages = {
   a2: string
   q3: string
   a3: string
-  q4: string
-  a4: string
-  q5: string
-  a5: string
 }
 
 type HomeMessages = {
@@ -84,8 +80,6 @@ export function buildHomeJsonLd(locale: string, messages: HomeMessages) {
     { q: faq.q1, a: faq.a1 },
     { q: faq.q2, a: faq.a2 },
     { q: faq.q3, a: faq.a3 },
-    { q: faq.q4, a: faq.a4 },
-    { q: faq.q5, a: faq.a5 },
   ].map(({ q, a }) => ({
     '@type': 'Question',
     name: q,
