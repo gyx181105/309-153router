@@ -253,7 +253,12 @@ export async function createRechargeOrderService(
       title: `账户充值 - ¥${amount}`,
       notifyUrl: notifyUrl(),
       appId,
-      meta: null,
+      meta:
+        payProvider === 'ALIPAY' && locale
+          ? {
+              return_url: `${(process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000').replace(/\/$/, '')}/${locale}/recharge?alipay=success`,
+            }
+          : null,
     })
   } catch (error) {
     console.error('调用支付网关创建订单失败:', {
@@ -265,8 +270,14 @@ export async function createRechargeOrderService(
     throw new Error(`创建支付订单失败: ${error instanceof Error ? error.message : '未知错误'}`)
   }
 
+  // 支付宝 H5：跳转收银台（pay_url）；微信 NATIVE：本地二维码（qrcode_url）
+  const payUrl = gatewayResponse.pay_url || ''
   const qrcodeUrl = gatewayResponse.qrcode_url || ''
-  if (!qrcodeUrl) {
+  if (payProvider === 'ALIPAY') {
+    if (!payUrl && !qrcodeUrl) {
+      throw new Error('支付网关未返回支付宝支付链接')
+    }
+  } else if (!qrcodeUrl) {
     throw new Error('支付网关未返回支付二维码')
   }
 
@@ -275,14 +286,15 @@ export async function createRechargeOrderService(
     bizOrderNo,
     amount: new Prisma.Decimal(amount),
     payProvider,
-    qrcodeUrl,
+    qrcodeUrl: payUrl || qrcodeUrl,
     gatewayOrderNo: gatewayResponse.gateway_order_no || null,
   })
 
   return {
     orderId: order.id,
     bizOrderNo: order.bizOrderNo,
-    qrcodeUrl,
+    qrcodeUrl: payProvider === 'ALIPAY' ? '' : qrcodeUrl,
+    payUrl: payProvider === 'ALIPAY' ? payUrl || qrcodeUrl : undefined,
     amount,
     payProvider,
   }

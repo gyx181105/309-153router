@@ -17,6 +17,38 @@ export default function RechargePage() {
   const searchParams = useSearchParams()
   const [order, setOrder] = useState<CreateRechargeOrderResult | null>(null)
 
+  const handleOrderCreated = (newOrder: CreateRechargeOrderResult) => {
+    if (newOrder.payProvider === 'STRIPE') {
+      if (newOrder.payUrl) {
+        window.location.href = newOrder.payUrl
+        return
+      }
+      if (newOrder.stripeChargeStatus === 'succeeded' && newOrder.paid) {
+        toast.success(t('recharge.toastRechargeSuccess'))
+        router.push(`/${locale}/dashboard`)
+        return
+      }
+      setOrder(newOrder)
+      return
+    }
+    // 支付宝：跳转电脑收银台（excashier）
+    if (newOrder.payProvider === 'ALIPAY' && newOrder.payUrl) {
+      window.location.href = newOrder.payUrl
+      return
+    }
+    setOrder(newOrder)
+  }
+
+  const handleClose = () => setOrder(null)
+
+  const renderOrderView = () => {
+    if (!order) return null
+    if (order.payProvider === 'STRIPE') {
+      return <StripeChargePending order={order} onClose={handleClose} />
+    }
+    return <PaymentQrcode order={order} onClose={handleClose} />
+  }
+
   useEffect(() => {
     const stripe = searchParams.get('stripe')
     if (stripe === 'success') {
@@ -32,32 +64,14 @@ export default function RechargePage() {
     }
   }, [searchParams, t])
 
-  const handleOrderCreated = (newOrder: CreateRechargeOrderResult) => {
-    if (newOrder.payProvider === 'STRIPE') {
-      if (newOrder.payUrl) {
-        window.location.href = newOrder.payUrl
-        return
-      }
-      if (newOrder.stripeChargeStatus === 'succeeded' && newOrder.paid) {
-        toast.success(t('recharge.toastRechargeSuccess'))
-        router.push(`/${locale}/dashboard`)
-        return
-      }
-      setOrder(newOrder)
-      return
+  useEffect(() => {
+    if (searchParams.get('alipay') === 'success') {
+      toast.success(t('recharge.toastRechargeSuccess'))
+      const url = new URL(window.location.href)
+      url.searchParams.delete('alipay')
+      window.history.replaceState({}, '', url.pathname + url.search)
     }
-    setOrder(newOrder)
-  }
-
-  const handleClose = () => setOrder(null)
-
-  const renderOrderView = () => {
-    if (!order) return null
-    if (order.payProvider === 'STRIPE') {
-      return <StripeChargePending order={order} onClose={handleClose} />
-    }
-    return <PaymentQrcode order={order} onClose={handleClose} />
-  }
+  }, [searchParams, t])
 
   return (
     <AuthGuard>

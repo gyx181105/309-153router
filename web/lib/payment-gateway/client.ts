@@ -11,7 +11,7 @@ export interface CreatePayOrderOptions {
   bizOrderNo: string
   amount: number
   payProvider: 'WECHAT' | 'ALIPAY' | 'STRIPE'
-  payMethod: 'NATIVE' | 'H5' | 'JSAPI' | 'MINIAPP' | 'APP'
+  payMethod: 'NATIVE' | 'H5' | 'JSAPI' | 'MINIAPP' | 'APP' | 'PAGE'
   title?: string
   currency?: string
   clientType?: string
@@ -62,6 +62,9 @@ export class PaymentGatewayClient {
     this.httpClient = axios.create({
       baseURL: this.baseUrl,
       timeout: 30000,
+      // 内网 PayRouter 必须直连；避免继承进程里的 HTTP(S)_PROXY
+      // 把 http://192.168.x.x 误打到 HTTPS 代理口（Cloudflare 400）
+      proxy: false,
     })
   }
 
@@ -184,6 +187,7 @@ export class PaymentGatewayClient {
           data,
           url,
           requestData,
+          responseHeaders: error.response.headers,
         })
         throw new Error(`支付网关错误 (${status}): ${JSON.stringify(data)}`)
       } else if (error.request) {

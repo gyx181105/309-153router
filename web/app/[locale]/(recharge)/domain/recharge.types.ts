@@ -9,7 +9,11 @@ export const PAY_PROVIDERS: readonly PayProvider[] = ['WECHAT', 'ALIPAY', 'STRIP
 
 /** 按渠道选择 PayRouter pay_method */
 export function payMethodForProvider(provider: PayProvider): 'NATIVE' | 'H5' {
-  return provider === 'STRIPE' ? 'H5' : 'NATIVE'
+  if (provider === 'STRIPE') return 'H5'
+  // 支付宝：H5/电脑网站跳转收银台（PayRouter 无 PAGE，用 H5 拿 pay_url）
+  if (provider === 'ALIPAY') return 'H5'
+  // 微信：本地展示二维码扫码
+  return 'NATIVE'
 }
 
 export interface RechargeOrder {
@@ -40,9 +44,9 @@ export type StripeChargeStatus = 'succeeded' | 'requires_action' | 'pending'
 export interface CreateRechargeOrderResult {
   orderId: string
   bizOrderNo: string
-  /** 微信/支付宝扫码 URL；Stripe 直扣为空 */
+  /** 微信扫码 URL；支付宝跳转时为空 */
   qrcodeUrl: string
-  /** @deprecated P1.5 已绑卡直扣，不再跳转 Checkout */
+  /** 支付宝电脑收银台 / Stripe Checkout 跳转链接 */
   payUrl?: string
   amount: number
   payProvider: PayProvider
