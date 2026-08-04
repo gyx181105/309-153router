@@ -68,12 +68,9 @@ pub async fn handle_chat(
     let route = state.model_router.route(&request.model).await;
     info!(model = %request.model, provider = ?route.provider, stream = request.stream, "routing");
 
-    // 余额预检：要求 balance >= estimated_cost，避免透支
+    // 余额预检（与正式扣费同一套 compute_cost，含 token ×1.2）
     let max_tokens = request.max_tokens.unwrap_or(4096) as i32;
-    let k = bigdecimal::BigDecimal::from(1000i32);
-    let estimated_output = bigdecimal::BigDecimal::from(max_tokens) / &k * &pricing.output_price;
-    let estimated_input  = bigdecimal::BigDecimal::from(500i32) / &k * &pricing.input_price;
-    let estimated_cost   = estimated_input + estimated_output;
+    let estimated_cost = compute_cost(500, max_tokens, &pricing);
     let balance = db::get_user_balance(&state.db, meta.user_id).await?;
     if balance < estimated_cost {
         return Err(AppError::InsufficientBalance("余额不足，请充值".to_string()));

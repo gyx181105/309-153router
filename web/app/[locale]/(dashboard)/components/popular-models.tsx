@@ -71,12 +71,11 @@ export function PopularModels() {
     fetchModels()
   }, [])
 
-  /** 智能格式化价格：根据数值大小自适应小数位数 */
-  function formatPrice(price: number): string {
-    if (price === 0) return '¥0'
-    if (price >= 1) return `¥${price.toFixed(2)}`
-    if (price >= 0.01) return `¥${price.toFixed(4)}`
-    return `¥${price.toFixed(6)}`
+  /** DB 存 ¥/1K；界面展示 ¥/1M（×1000） */
+  function formatPrice(pricePer1k: number): string {
+    if (pricePer1k === 0) return '—'
+    const price = pricePer1k * 1000
+    return `¥${price.toFixed(2)}`
   }
 
   function formatProvider(provider: string): string {

@@ -1,0 +1,22 @@
+{
+  "name": "news-generator-kit",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Standalone AI news article generator (topic discovery + Markdown writer)",
+  "scripts": {
+    "news:generate": "tsx scripts/generate-article.ts",
+    "news:generate:daily": "tsx scripts/generate-article.ts --auto"
+  },
+  "dependencies": {
+    "gray-matter": "^4.0.3",
+    "openai": "^4.104.0",
+    "undici": "^6.21.0",
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "tsx": "^4.19.4",
+    "typescript": "^5.0.0"
+  }
+}

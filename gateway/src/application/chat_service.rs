@@ -331,12 +331,9 @@ pub async fn handle_chat(
         .map_err(|e| e)?;
     info!(ms = t.elapsed().as_millis(), model = %route.model, "stage: balance_check");
 
-    // 余额预检
+    // 余额预检（与正式扣费同一套 compute_cost，含 token ×1.2）
     let max_tokens = request.max_tokens.unwrap_or(4096) as i32;
-    let k = bigdecimal::BigDecimal::from(1000i32);
-    let estimated_output = bigdecimal::BigDecimal::from(max_tokens) / &k * &pricing.output_price;
-    let estimated_input  = bigdecimal::BigDecimal::from(500i32) / &k * &pricing.input_price;
-    let estimated_cost   = estimated_input + estimated_output;
+    let estimated_cost = compute_cost(500, max_tokens, &pricing);
     if balance < estimated_cost {
         spawn_failure_log(state.db.clone(), FailureLogArgs {
             user_id: meta.user_id,

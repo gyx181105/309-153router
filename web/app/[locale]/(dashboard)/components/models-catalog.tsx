@@ -27,10 +27,10 @@ function formatProvider(code: string): string {
   return map[code.toLowerCase()] || code
 }
 
-function formatPrice(price: number): string {
-  if (price === 0) return "—"
-  if (price < 0.01) return `¥${price.toFixed(6)}`
-  return `¥${price.toFixed(4)}`
+/** DB 存 ¥/1K；界面展示 ¥/1M（×1000） */
+function formatPrice(pricePer1k: number): string {
+  if (pricePer1k === 0) return "—"
+  return `¥${(pricePer1k * 1000).toFixed(2)}`
 }
 
 function formatTokens(n: number): string {
