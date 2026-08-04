@@ -33,6 +33,11 @@ export default function RechargePage() {
     }
     // 支付宝：跳转电脑收银台（excashier）
     if (newOrder.payProvider === 'ALIPAY' && newOrder.payUrl) {
+      try {
+        sessionStorage.setItem('pendingAlipayRechargeOrderId', newOrder.orderId)
+      } catch {
+        /* ignore */
+      }
       window.location.href = newOrder.payUrl
       return
     }

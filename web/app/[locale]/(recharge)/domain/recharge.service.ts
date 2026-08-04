@@ -6,6 +6,7 @@ import {
   createRechargeOrder,
   findRechargeOrderById,
   findRechargeOrderByBizOrderNo,
+  findRechargeOrderByGatewayOrderNo,
   updateRechargeOrderStatus,
 } from './recharge.repo'
 import {
@@ -446,6 +447,28 @@ export async function checkPaymentStatusService(
   }
 
   return { status: 'pending', paid: false }
+}
+
+/** 支付宝回跳带 out_trade_no（网关单号）时补入账 */
+export async function checkPaymentStatusByGatewayOrderNo(
+  gatewayOrderNo: string
+): Promise<{ status: string; paid: boolean }> {
+  const order = await findRechargeOrderByGatewayOrderNo(gatewayOrderNo)
+  if (!order) {
+    throw new Error('订单不存在')
+  }
+  return checkPaymentStatusService(order.id)
+}
+
+/** 按业务单号补查（如 RECHARGE_xxx） */
+export async function checkPaymentStatusByBizOrderNo(
+  bizOrderNo: string
+): Promise<{ status: string; paid: boolean }> {
+  const order = await findRechargeOrderByBizOrderNo(bizOrderNo)
+  if (!order) {
+    throw new Error('订单不存在')
+  }
+  return checkPaymentStatusService(order.id)
 }
 
 /**
