@@ -64,14 +64,12 @@ export default function RechargePage() {
     }
   }, [searchParams, t])
 
+  // 兼容旧 return_url：曾回充值页，统一转到 dashboard
   useEffect(() => {
     if (searchParams.get('alipay') === 'success') {
-      toast.success(t('recharge.toastRechargeSuccess'))
-      const url = new URL(window.location.href)
-      url.searchParams.delete('alipay')
-      window.history.replaceState({}, '', url.pathname + url.search)
+      router.replace(`/${locale}/dashboard?alipay=success`)
     }
-  }, [searchParams, t])
+  }, [searchParams, locale, router])
 
   return (
     <AuthGuard>

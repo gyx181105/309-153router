@@ -256,7 +256,7 @@ export async function createRechargeOrderService(
       meta:
         payProvider === 'ALIPAY' && locale
           ? {
-              return_url: `${(process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000').replace(/\/$/, '')}/${locale}/recharge?alipay=success`,
+              return_url: `${(process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000').replace(/\/$/, '')}/${locale}/dashboard?alipay=success`,
             }
           : null,
     })
